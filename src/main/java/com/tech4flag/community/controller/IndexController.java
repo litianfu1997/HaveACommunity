@@ -1,14 +1,20 @@
 package com.tech4flag.community.controller;
 
+import com.tech4flag.community.dto.QuestionDTO;
+import com.tech4flag.community.mapper.QuestionMapper;
 import com.tech4flag.community.mapper.UserMapper;
+import com.tech4flag.community.model.Question;
 import com.tech4flag.community.model.User;
+import com.tech4flag.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 /**
@@ -21,9 +27,11 @@ import javax.servlet.http.HttpServletRequest;
 public class IndexController {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private QuestionService questionService;
 
     @GetMapping("/index")
-    public String index(HttpServletRequest request) {
+    public String index(HttpServletRequest request, Model model) {
         Cookie[] cookies = request.getCookies();
         if (cookies !=null && cookies.length != 0){
             for (Cookie cookie : cookies) {
@@ -37,7 +45,8 @@ public class IndexController {
                 }
             }
         }
-
+        List<QuestionDTO> questionList = questionService.list();
+        model.addAttribute("questions",questionList);
         return "index";
     }
 }
