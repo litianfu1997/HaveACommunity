@@ -19,11 +19,12 @@ import java.io.IOException;
 public class GithubProvider {
     /**
      * 通过okHttp获取accessToken
+     *
      * @param accessTokenDTO
      * @return
      */
-    public String getAccessToken(AccessTokenDTO accessTokenDTO){
-         MediaType mediaType = MediaType.get("application/json; charset=utf-8");
+    public String getAccessToken(AccessTokenDTO accessTokenDTO) {
+        MediaType mediaType = MediaType.get("application/json; charset=utf-8");
 
         OkHttpClient client = new OkHttpClient();
 
@@ -41,10 +42,11 @@ public class GithubProvider {
         }
         return null;
     }
-    public GitHubUser getUser(String accessToken){
-        OkHttpClient client =new OkHttpClient();
+
+    public GitHubUser getUser(String accessToken) {
+        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("https://api.github.com/user?access_token="+accessToken)
+                .url("https://api.github.com/user?access_token=" + accessToken)
                 .build();
         try {
             Response response = client.newCall(request).execute();
