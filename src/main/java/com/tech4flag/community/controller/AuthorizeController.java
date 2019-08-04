@@ -5,6 +5,7 @@ import com.tech4flag.community.dto.GitHubUser;
 import com.tech4flag.community.mapper.UserMapper;
 import com.tech4flag.community.model.User;
 import com.tech4flag.community.provider.GithubProvider;
+import com.tech4flag.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,7 @@ public class AuthorizeController {
     @Value("${github.redirect.uri}")
     private String redirectUri;
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
     @GetMapping("/callback")
     public String callback(@RequestParam(name="code")String code,@RequestParam(name = "state")String state,
                             HttpServletRequest request,HttpServletResponse response){
@@ -54,7 +55,7 @@ public class AuthorizeController {
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(gitHubUser.getAvatarUrl());
-            userMapper.insert(user);
+            userService.createOrUpdate(user);
 //            把token写入cookie
             response.addCookie(new Cookie("token",token));
 //            重定向到index页面
@@ -64,5 +65,13 @@ public class AuthorizeController {
             return "redirect:index";
         }
 
+    }
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        Cookie cookie =new Cookie("token",null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:index";
     }
 }
