@@ -2,6 +2,7 @@ package com.tech4flag.community.service;
 
 import com.tech4flag.community.dto.PaginationDTO;
 import com.tech4flag.community.dto.QuestionDTO;
+import com.tech4flag.community.exception.CustomizeException;
 import com.tech4flag.community.mapper.QuestionMapper;
 import com.tech4flag.community.mapper.UserMapper;
 import com.tech4flag.community.model.Question;
@@ -90,18 +91,34 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-
         paginationDTO.setQuestions(questionDTOList);
         return paginationDTO;
     }
 
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.getById(id);
+        if (question==null){
+            throw new CustomizeException("你找到问题不见了，要不换一个试试？");
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         //BeanUtils可以将两个对象的属性进行快速封装
         BeanUtils.copyProperties(question,questionDTO);
         User user = userMapper.findById(question.getCreator());
         questionDTO.setUser(user);
         return questionDTO;
+    }
+
+    public void createOrUpdate(Question question) {
+        if (question.getId() == null){
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(System.currentTimeMillis());
+            questionMapper.create(question);
+        }else {
+            question.setGmtModified(System.currentTimeMillis());
+            Integer update = questionMapper.update(question);
+            if (update!=1){
+                throw new CustomizeException("你要更新的问题不见了！");
+            }
+        }
     }
 }

@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${sectionName}"></title>
-    <link rel="stylesheet" href="/css/bootstrap.css"/>
-    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="/css/community.css">
+    <link rel="stylesheet" href="/community/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/community/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/community/css/community.css">
     <!--<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.js"></script>-->
-    <script src="/js/jquery3.4.1.js"></script>
-    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/community/js/jquery3.4.1.js"></script>
+    <script src="/community/js/bootstrap.min.js" type="application/javascript"></script>
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
@@ -22,12 +22,14 @@
 
                 <div class="media" th:each="question:${pagination.questions}">
                     <div class="media-left img-size">
-                        <a href="#">
+                        <a>
                             <img class="media-object img-rounded "  th:src="${question.user.avatarUrl}" >
                         </a>
                     </div>
                     <div class="media-body">
-                        <h4 class="media-heading" th:text="${question.title}"></h4>
+                        <a th:href="@{'/community/question/'+${question.id}}">
+                            <h4 class="media-heading"  th:text="${question.title}"></h4>
+                        </a>
                         <span th:text="${question.description}"></span><br>
                         <span class="text-desc"><span th:text="${question.commentCount}"></span>个回复 - <span th:text="${question.viewCount}"></span>次浏览 - <span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd hh:mm:ss')}"></span></span>
                     </div>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>错误</title>
+    <link rel="stylesheet" href="/community/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/community/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/community/css/community.css">
+    <!--<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.js"></script>-->
+    <script src="/community/js/jquery3.4.1.js"></script>
+    <script src="/community/js/bootstrap.min.js" type="application/javascript"></script>
+</head>
+<body class="error">
+    <div th:insert="~{navigation :: nav}"></div>
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="jumbotron ">
+                <h1>出错了！</h1>
+                <p th:text="${message}">服务太热了，要不然稍等下再来试试</p>
+                <p><a class="btn btn-primary btn-lg" role="button" href="/community/index">回到主页</a></p>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
