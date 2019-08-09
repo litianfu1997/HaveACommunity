@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface CommentMapper {
-    @Insert("insert into comment(parent_id,type,commentator,gmt_modified,gmt_create,like_count,content)" +
-            "value(#{parentId},#{type},#{commentator},#{gmtModified},#{gmtCreate},likeCount,content)")
+    @Insert("insert into comment(parent_id,type,commentator,gmt_modified,gmt_create,like_count,content) " +
+            "values(#{parentId},#{type},#{commentator},#{gmtModified},#{gmtCreate},#{likeCount},#{content})")
     void insert(Comment comment);
 }

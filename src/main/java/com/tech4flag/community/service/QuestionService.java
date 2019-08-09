@@ -2,6 +2,7 @@ package com.tech4flag.community.service;
 
 import com.tech4flag.community.dto.PaginationDTO;
 import com.tech4flag.community.dto.QuestionDTO;
+import com.tech4flag.community.exception.CustomizeErrorCode;
 import com.tech4flag.community.exception.CustomizeException;
 import com.tech4flag.community.mapper.QuestionMapper;
 import com.tech4flag.community.mapper.UserMapper;
@@ -98,7 +99,7 @@ public class QuestionService {
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.getById(id);
         if (question==null){
-            throw new CustomizeException("你找到问题不见了，要不换一个试试？");
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
         }
         QuestionDTO questionDTO = new QuestionDTO();
         //BeanUtils可以将两个对象的属性进行快速封装
@@ -117,7 +118,7 @@ public class QuestionService {
             question.setGmtModified(System.currentTimeMillis());
             Integer update = questionMapper.update(question);
             if (update!=1){
-                throw new CustomizeException("你要更新的问题不见了！");
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
     }

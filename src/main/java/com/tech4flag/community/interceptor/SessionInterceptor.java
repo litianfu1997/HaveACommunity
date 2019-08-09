@@ -3,6 +3,7 @@ package com.tech4flag.community.interceptor;
 import com.tech4flag.community.mapper.UserMapper;
 import com.tech4flag.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * @email 1035869369@qq.com
  * @date 2019-07-21 13:29
  */
-@Service
+@Component
 public class SessionInterceptor implements HandlerInterceptor {
     @Autowired
     private UserMapper userMapper;
