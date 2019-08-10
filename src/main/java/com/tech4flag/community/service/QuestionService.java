@@ -11,6 +11,7 @@ import com.tech4flag.community.model.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
  * @date 2019-07-14 19:19
  */
 @Service
+@Transactional
 public class QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
@@ -113,6 +115,9 @@ public class QuestionService {
         if (question.getId() == null){
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(System.currentTimeMillis());
+            question.setViewCount(0);
+            question.setLikeCount(0);
+            question.setCommentCount(0);
             questionMapper.create(question);
         }else {
             question.setGmtModified(System.currentTimeMillis());
@@ -123,9 +128,21 @@ public class QuestionService {
         }
     }
 
+    /**
+     * 阅读数增加
+     * @param id
+     */
     public void incView(Integer id) {
         Question question = questionMapper.getById(id);
-//        question.setViewCount(question.getViewCount()+1);
         questionMapper.updateViewCount(question);
+    }
+
+    /**
+     * 回复数增加
+     * @param id
+     */
+    public void incComment(Integer id){
+        Question question = questionMapper.getById(id);
+        questionMapper.updateCommentCount(question);
     }
 }

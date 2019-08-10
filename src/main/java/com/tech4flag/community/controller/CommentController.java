@@ -6,6 +6,7 @@ import com.tech4flag.community.exception.CustomizeErrorCode;
 import com.tech4flag.community.mapper.CommentMapper;
 import com.tech4flag.community.model.Comment;
 import com.tech4flag.community.model.User;
+import com.tech4flag.community.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ import java.util.HashMap;
 @Controller
 public class CommentController {
     @Autowired
-    private CommentMapper commentMapper;
+    private CommentService commentService;
 
     @RequestMapping("/comment")
     public @ResponseBody
@@ -42,7 +43,7 @@ public class CommentController {
         comment.setGmtModified(System.currentTimeMillis());
         comment.setCommentator(1);
         comment.setLikeCount(0L);
-//        commentMapper.insert(comment);
+        commentService.insert(comment);
 
         return ResultDTO.errorOf(200,"评论成功");
     }

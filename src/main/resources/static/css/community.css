@@ -30,3 +30,10 @@ body {
 .error{
     background-color: #eee;
 }
+
+.comment{
+    margin: 10px 0;
+}
+.media-body{
+    padding-top: 10px;
+}

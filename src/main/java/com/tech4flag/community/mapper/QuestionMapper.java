@@ -47,5 +47,8 @@ public interface QuestionMapper {
     Integer update(Question question);
     @Update("update question set view_count=view_count+1 where id=#{id}")
     Integer updateViewCount(Question question);
-
+    @Update("update question set comment_count=comment_count+1 where id=#{id}")
+    Integer updateCommentCount(Question question);
+    @Select("select * from question where id=#{parentId}")
+    Question selectQuestionById(@Param("parentId") Long parentId);
 }

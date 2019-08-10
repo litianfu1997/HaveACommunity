@@ -4,6 +4,7 @@ import com.tech4flag.community.mapper.UserMapper;
 import com.tech4flag.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author litianfu
@@ -12,11 +13,10 @@ import org.springframework.stereotype.Service;
  * @date 2019-08-04 18:37
  */
 @Service
+@Transactional
 public class UserService {
     @Autowired
     private UserMapper userMapper;
-
-
     public void createOrUpdate(User user) {
         User dbUser = userMapper.findByAccountId(user.getAccountId());
         if (dbUser == null){
