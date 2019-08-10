@@ -10,6 +10,15 @@
     <script src="/community/js/jquery3.4.1.js"></script>
     <script src="/community/js/bootstrap.min.js" type="application/javascript"></script>
 </head>
+<script type="application/javascript">
+    window.onload = function (ev) {
+        var item = window.localStorage.getItem("closable");
+        if (item == "true"){
+            window.close();
+            window.localStorage.removeItem("closable");
+        }
+    }
+</script>
 <body>
 <!--插入导航栏-->
 <div th:insert="~{navigation :: nav}"></div>
