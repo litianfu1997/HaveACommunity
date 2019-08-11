@@ -1,9 +1,8 @@
 package com.tech4flag.community.controller;
 
-import com.tech4flag.community.dto.CommentDTO;
+import com.tech4flag.community.dto.CommentCreateDTO;
 import com.tech4flag.community.dto.ResultDTO;
 import com.tech4flag.community.exception.CustomizeErrorCode;
-import com.tech4flag.community.mapper.CommentMapper;
 import com.tech4flag.community.model.Comment;
 import com.tech4flag.community.model.User;
 import com.tech4flag.community.service.CommentService;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 
 /**
  * @author litianfu
@@ -29,16 +27,16 @@ public class CommentController {
 
     @RequestMapping("/comment")
     public @ResponseBody
-    Object comment(@RequestBody CommentDTO commentDTO, HttpServletRequest request){
+    Object comment(@RequestBody CommentCreateDTO commentCreateDTO, HttpServletRequest request){
         User user = (User) request.getSession().getAttribute("user");
         if (user ==null){
             return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
         }
         Comment comment =new Comment();
-        comment.setType(commentDTO.getType());
+        comment.setType(commentCreateDTO.getType());
         comment.setCommentator(1);
-        comment.setParentId(commentDTO.getParentId());
-        comment.setContent(commentDTO.getContent());
+        comment.setParentId(commentCreateDTO.getParentId());
+        comment.setContent(commentCreateDTO.getContent());
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(System.currentTimeMillis());
         comment.setCommentator(1);

@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 /**
  * @author litianfu
  * @version 1.0
@@ -19,4 +21,6 @@ public interface CommentMapper {
     void insert(Comment comment);
     @Select("select * from comment where id = #{parentId}")
     Comment selectCommentByUserId(@Param("parentId") Long parentId);
+    @Select("select * from comment where parent_id = #{parentId}")
+    List<Comment> selectCommentListByParentId(@Param("parentId") Long parentId);
 }

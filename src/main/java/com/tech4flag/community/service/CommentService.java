@@ -1,15 +1,26 @@
 package com.tech4flag.community.service;
 
+import com.tech4flag.community.dto.CommentDTO;
 import com.tech4flag.community.enums.CommentTypeEnum;
 import com.tech4flag.community.exception.CustomizeErrorCode;
 import com.tech4flag.community.exception.CustomizeException;
 import com.tech4flag.community.mapper.CommentMapper;
 import com.tech4flag.community.mapper.QuestionMapper;
+import com.tech4flag.community.mapper.UserMapper;
 import com.tech4flag.community.model.Comment;
 import com.tech4flag.community.model.Question;
+import com.tech4flag.community.model.User;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * @author litianfu
@@ -25,6 +36,8 @@ public class CommentService {
     private QuestionMapper questionMapper;
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private UserMapper userMapper;
     @Transactional
     public void insert(Comment comment){
         if (comment.getParentId()==null||comment.getParentId()==0){
@@ -55,5 +68,31 @@ public class CommentService {
         }
 //        commentMapper.insert(comment);
 
+    }
+
+    public List<CommentDTO> selectCommentListByParentId(Integer parentId) {
+        List<Comment> comments = commentMapper.selectCommentListByParentId(Long.valueOf(parentId));
+        if (comments.size()==0){
+            return null;
+        }
+        //获取去重的评论人
+        Set<Integer> commentators = comments.stream().map(comment -> comment.getCommentator()).collect(Collectors.toSet());
+        List<Integer> commentatorId = new ArrayList<>();
+        commentatorId.addAll(commentators);
+        List<User> userList = new ArrayList<>();
+        for (int i=0;i<commentatorId.size();i++) {
+            User user = userMapper.findById(commentatorId.get(i));
+            userList.add(user);
+        }
+
+        Map<Integer, User> userMap = userList.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
+        List<CommentDTO> commentDTOS = comments.stream().map(comment -> {
+            CommentDTO commentDTO = new CommentDTO();
+            BeanUtils.copyProperties(comment, commentDTO);
+            commentDTO.setUser(userMap.get(comment.getCommentator()));
+            return commentDTO;
+        }).collect(Collectors.toList());
+
+        return commentDTOS;
     }
 }
