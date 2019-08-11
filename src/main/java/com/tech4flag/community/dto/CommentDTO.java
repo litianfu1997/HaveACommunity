@@ -1,16 +1,17 @@
 package com.tech4flag.community.dto;
 
+import com.tech4flag.community.model.User;
 import lombok.Data;
 
-/**
- * @author litianfu
- * @version 1.0
- * @email 1035869369@qq.com
- * @date 2019-08-07 15:08
- */
 @Data
 public class CommentDTO {
+    private Integer id;
     private Long parentId;
-    private String content;
     private Integer type;
+    private Integer commentator;
+    private Long gmtCreate;
+    private Long gmtModified;
+    private Long likeCount;
+    private String content;
+    private User user;
 }
