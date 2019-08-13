@@ -70,10 +70,10 @@ public class CommentService {
 
     }
 
-    public List<CommentDTO> selectCommentListByParentId(Integer parentId) {
-        List<Comment> comments = commentMapper.selectCommentListByParentId(Long.valueOf(parentId));
+    public List<CommentDTO> selectCommentList(Integer parentId, Integer type) {
+        List<Comment> comments = commentMapper.selectCommentListByParentId(Long.valueOf(parentId),type);
         if (comments.size()==0){
-            return null;
+            return new ArrayList<>();
         }
         //获取去重的评论人
         Set<Integer> commentators = comments.stream().map(comment -> comment.getCommentator()).collect(Collectors.toSet());

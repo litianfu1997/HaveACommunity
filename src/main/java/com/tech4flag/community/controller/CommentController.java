@@ -1,18 +1,20 @@
 package com.tech4flag.community.controller;
 
 import com.tech4flag.community.dto.CommentCreateDTO;
+import com.tech4flag.community.dto.CommentDTO;
 import com.tech4flag.community.dto.ResultDTO;
+import com.tech4flag.community.enums.CommentTypeEnum;
 import com.tech4flag.community.exception.CustomizeErrorCode;
 import com.tech4flag.community.model.Comment;
 import com.tech4flag.community.model.User;
 import com.tech4flag.community.service.CommentService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author litianfu
@@ -32,6 +34,9 @@ public class CommentController {
         if (user ==null){
             return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
         }
+        if (commentCreateDTO==null|| StringUtils.isBlank(commentCreateDTO.getContent())){
+            return ResultDTO.errorOf(CustomizeErrorCode.COMMENT_NOT_NULL);
+        }
         Comment comment =new Comment();
         comment.setType(commentCreateDTO.getType());
         comment.setCommentator(1);
@@ -42,7 +47,11 @@ public class CommentController {
         comment.setCommentator(user.getId());
         comment.setLikeCount(0L);
         commentService.insert(comment);
-
-        return ResultDTO.errorOf(200,"评论成功");
+        return ResultDTO.okOf(200,"评论成功");
+    }
+    @RequestMapping(value = "/comment/{id}",method = RequestMethod.GET)
+    public @ResponseBody ResultDTO<List<CommentDTO>> comments(@PathVariable(name = "id") Integer id){
+        List<CommentDTO> commentDTOS = commentService.selectCommentList(id, CommentTypeEnum.COMMENT.getType());
+        return ResultDTO.okOf(commentDTOS);
     }
 }

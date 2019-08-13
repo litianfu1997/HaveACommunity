@@ -21,6 +21,6 @@ public interface CommentMapper {
     void insert(Comment comment);
     @Select("select * from comment where id = #{parentId}")
     Comment selectCommentByUserId(@Param("parentId") Long parentId);
-    @Select("select * from comment where parent_id = #{parentId}")
-    List<Comment> selectCommentListByParentId(@Param("parentId") Long parentId);
+    @Select("select * from comment where parent_id = #{parentId} and type=#{type}")
+    List<Comment> selectCommentListByParentId(@Param("parentId") Long parentId,@Param("type") Integer type);
 }
