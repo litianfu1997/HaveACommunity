@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="/community/css/community.css">
     <script src="/community/js/jquery3.4.1.js"></script>
     <script src="/community/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/community/js/moment.min.js"></script>
     <script src="/community/js/community.js"></script>
+
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
@@ -51,7 +53,11 @@
                             <div th:text="${comment.getContent()}"></div>
                             <div class="menu">
                                 <span class="glyphicon glyphicon-thumbs-up icon"></span>
-                                <span class="glyphicon glyphicon-comment icon" th:data-id="${comment.id}" onclick="collapseComments(this)"></span>
+                                <span th:data-id="${comment.id}" onclick="collapseComments(this)" class="icon">
+                                    <span class="glyphicon glyphicon-comment"></span>
+                                    <span  th:text="${comment.getCommentCount()}"></span>
+                                </span>
+
                                 <span class="pull-right" th:text="${#dates.format(comment.gmtCreate,'yyyy-MM-dd hh:mm:ss')}"></span>
                             </div>
                             <!--二级评论-->

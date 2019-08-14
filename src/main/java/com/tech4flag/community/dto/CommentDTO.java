@@ -11,6 +11,7 @@ public class CommentDTO implements Comparable<CommentDTO>{
     private Integer commentator;
     private Long gmtCreate;
     private Long gmtModified;
+    private Long commentCount;
     private Long likeCount;
     private String content;
     private User user;

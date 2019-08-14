@@ -12,6 +12,7 @@ import com.tech4flag.community.model.Question;
 import com.tech4flag.community.model.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +55,11 @@ public class CommentService {
             if (dbComment == null){
                 throw  new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
+            Comment parentComment = new Comment();
+            Long parentId = comment.getParentId();
+            parentComment.setId(Math.toIntExact(parentId));
             commentMapper.insert(comment);
+            commentMapper.incCommentCount(parentComment);
         }else {
             //回复问题
             Question question = questionMapper.selectQuestionById(comment.getParentId());
