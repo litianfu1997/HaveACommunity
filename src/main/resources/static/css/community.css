@@ -76,3 +76,16 @@ body {
 .sub-comments .btn{
     margin:10px 0;
 }
+.question-tags{
+    margin-right: 5px;
+}
+.question-related{
+    line-height: 20px;
+    font-size: 12px;
+    margin-left: 0;
+    list-style: none;
+    padding-left: 0;
+}
+.ad-img{
+    width: 100%;
+}

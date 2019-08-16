@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,9 +51,6 @@ public class QuestionService {
         paginationDTO.setPagination(totalPage,page);
         Integer offset = size * (page - 1);
         List<Question> questionList = questionMapper.list(offset,size);
-
-
-
         for (Question question : questionList) {
            User user = userMapper.findById(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
@@ -61,6 +59,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
+        Collections.sort(questionDTOList);
         paginationDTO.setQuestions(questionDTOList);
         return paginationDTO;
     }
@@ -109,6 +108,26 @@ public class QuestionService {
         User user = userMapper.findById(question.getCreator());
         questionDTO.setUser(user);
         return questionDTO;
+    }
+    public List<QuestionDTO> getRelevantQuestion(Integer id) {
+        Question question = questionMapper.getById(id);
+        if (question==null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
+        //\W:匹配非字母、数字、下划线。等价于 '[^A-Za-z0-9_]'
+        String tagRegexp = question.getTag().replaceAll(",", "|");
+        List<Question> questionList = questionMapper.relevantQuestion(id, tagRegexp);
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
+        //BeanUtils可以将两个对象的属性进行快速封装
+        for (Question question1 : questionList) {
+            QuestionDTO questionDTO =new QuestionDTO();
+            BeanUtils.copyProperties(question1,questionDTO);
+            User user = userMapper.findById(question1.getCreator());
+            questionDTO.setUser(user);
+            questionDTOList.add(questionDTO);
+        }
+
+        return questionDTOList;
     }
 
     public void createOrUpdate(Question question) {

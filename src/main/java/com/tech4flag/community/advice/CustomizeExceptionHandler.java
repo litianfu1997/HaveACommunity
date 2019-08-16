@@ -23,7 +23,7 @@ import java.io.PrintWriter;
  * @email 1035869369@qq.com
  * @date 2019-08-07 09:56
  */
-//@ControllerAdvice
+@ControllerAdvice
 public class CustomizeExceptionHandler {
     @ExceptionHandler(Exception.class)
     ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Throwable e, Model model){

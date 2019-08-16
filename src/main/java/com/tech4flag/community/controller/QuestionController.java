@@ -34,8 +34,10 @@ public class QuestionController {
         questionService.incView(id);
         List<CommentDTO> comments = commentService.selectCommentList(id, CommentTypeEnum.QUESTION.getType());
         QuestionDTO questionDTO = questionService.getById(id);
+        List<QuestionDTO> relevantQuestionList = questionService.getRelevantQuestion(id);
         //将按创建时间评论倒序
         Collections.sort(comments);
+        model.addAttribute("relevantQuestionList",relevantQuestionList);
         model.addAttribute("question",questionDTO);
         model.addAttribute("comments",comments);
         return "question";

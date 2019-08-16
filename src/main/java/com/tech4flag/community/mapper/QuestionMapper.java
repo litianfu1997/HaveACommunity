@@ -63,6 +63,15 @@ public interface QuestionMapper {
     Integer updateViewCount(Question question);
 
     /**
+     * 相关问题的查询
+     * @param id
+     * @param tagRegexp
+     * @return
+     */
+    @Select("select id,title,tag from question where tag regexp #{tagRegexp} and id != #{id}")
+    List<Question> relevantQuestion(@Param("id") Integer id,@Param("tagRegexp") String tagRegexp);
+
+    /**
      * 评论数加1
      * @param question
      * @return
