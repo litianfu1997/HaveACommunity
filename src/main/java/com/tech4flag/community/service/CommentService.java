@@ -2,17 +2,20 @@ package com.tech4flag.community.service;
 
 import com.tech4flag.community.dto.CommentDTO;
 import com.tech4flag.community.enums.CommentTypeEnum;
+import com.tech4flag.community.enums.NotificationStatusEnum;
+import com.tech4flag.community.enums.NotificationTypeEnum;
 import com.tech4flag.community.exception.CustomizeErrorCode;
 import com.tech4flag.community.exception.CustomizeException;
 import com.tech4flag.community.mapper.CommentMapper;
+import com.tech4flag.community.mapper.NotificationMapper;
 import com.tech4flag.community.mapper.QuestionMapper;
 import com.tech4flag.community.mapper.UserMapper;
 import com.tech4flag.community.model.Comment;
+import com.tech4flag.community.model.Notification;
 import com.tech4flag.community.model.Question;
 import com.tech4flag.community.model.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +41,8 @@ public class CommentService {
     private QuestionService questionService;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private NotificationMapper notificationMapper;
     @Transactional
     public void insert(Comment comment){
         if (comment.getParentId()==null||comment.getParentId()==0){
@@ -60,6 +64,8 @@ public class CommentService {
             parentComment.setId(Math.toIntExact(parentId));
             commentMapper.insert(comment);
             commentMapper.incCommentCount(parentComment);
+            //创建通知
+            createNotify(comment, dbComment.getCommentator(), NotificationTypeEnum.REPLY_COMMENT.getType());
         }else {
             //回复问题
             Question question = questionMapper.selectQuestionById(comment.getParentId());
@@ -70,9 +76,26 @@ public class CommentService {
             commentMapper.insert(comment);
             //回复问题数加一
             questionService.incComment(question.getId());
+            //创建通知
+            createNotify(comment,question.getCreator(), NotificationTypeEnum.REPLY_QUESTION.getType());
         }
 //        commentMapper.insert(comment);
 
+    }
+
+    private void createNotify(Comment comment, Integer receiver, Integer type) {
+        //回复通知
+        Notification notification =new Notification();
+        notification.setGmtCreate(System.currentTimeMillis());
+        notification.setType(type);
+        //我回复的是谁的评论的id
+        notification.setOuterId(Math.toIntExact(comment.getParentId()));
+        //接收到通知的人
+        notification.setNotifier(comment.getCommentator());
+        //设置未读状态
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+        notification.setReceiver(receiver);
+        notificationMapper.insertNotify(notification);
     }
 
     public List<CommentDTO> selectCommentList(Integer parentId, Integer type) {
