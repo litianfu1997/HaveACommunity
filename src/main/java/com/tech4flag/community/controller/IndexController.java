@@ -1,6 +1,8 @@
 package com.tech4flag.community.controller;
 
 import com.tech4flag.community.dto.PaginationDTO;
+import com.tech4flag.community.dto.QuestionDTO;
+import com.tech4flag.community.service.NotificationService;
 import com.tech4flag.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,12 +26,14 @@ public class IndexController {
     @Autowired
     private QuestionService questionService;
 
+
     @GetMapping("/index")
     public String index(HttpServletRequest request, Model model,
                         @RequestParam(name = "page",defaultValue = "1") Integer page,
                         @RequestParam(name = "size",defaultValue = "10") Integer size) {
-        PaginationDTO pagination = questionService.list(page,size);
+        PaginationDTO<QuestionDTO> pagination = questionService.list(page,size);
         model.addAttribute("pagination",pagination);
+        model.addAttribute("unreadCount",2);
         return "index";
     }
 }

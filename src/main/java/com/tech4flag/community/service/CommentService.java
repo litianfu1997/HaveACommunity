@@ -44,7 +44,7 @@ public class CommentService {
     @Autowired
     private NotificationMapper notificationMapper;
     @Transactional
-    public void insert(Comment comment){
+    public void insert(Comment comment, User user){
         if (comment.getParentId()==null||comment.getParentId()==0){
             //不存在该回复
             throw  new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
@@ -59,13 +59,17 @@ public class CommentService {
             if (dbComment == null){
                 throw  new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
+            Question question = questionMapper.selectQuestionById(dbComment.getParentId());
+            if (question ==null){
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
             Comment parentComment = new Comment();
             Long parentId = comment.getParentId();
             parentComment.setId(Math.toIntExact(parentId));
             commentMapper.insert(comment);
             commentMapper.incCommentCount(parentComment);
             //创建通知
-            createNotify(comment, dbComment.getCommentator(), NotificationTypeEnum.REPLY_COMMENT.getType());
+            createNotify(comment, dbComment.getCommentator(), user.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT.getType());
         }else {
             //回复问题
             Question question = questionMapper.selectQuestionById(comment.getParentId());
@@ -77,13 +81,13 @@ public class CommentService {
             //回复问题数加一
             questionService.incComment(question.getId());
             //创建通知
-            createNotify(comment,question.getCreator(), NotificationTypeEnum.REPLY_QUESTION.getType());
+            createNotify(comment,question.getCreator(),user.getName(),question.getTitle(), NotificationTypeEnum.REPLY_QUESTION.getType());
         }
 //        commentMapper.insert(comment);
 
     }
 
-    private void createNotify(Comment comment, Integer receiver, Integer type) {
+    private void createNotify(Comment comment, Integer receiver, String notifierName, String outerTitle, Integer type) {
         //回复通知
         Notification notification =new Notification();
         notification.setGmtCreate(System.currentTimeMillis());
@@ -94,6 +98,8 @@ public class CommentService {
         notification.setNotifier(comment.getCommentator());
         //设置未读状态
         notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+        notification.setNotifierName(notifierName);
+        notification.setOuterTitle(outerTitle);
         notification.setReceiver(receiver);
         notificationMapper.insertNotify(notification);
     }

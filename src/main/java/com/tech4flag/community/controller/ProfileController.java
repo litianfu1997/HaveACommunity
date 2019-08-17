@@ -1,7 +1,10 @@
 package com.tech4flag.community.controller;
 
+import com.tech4flag.community.dto.NotificationDTO;
 import com.tech4flag.community.dto.PaginationDTO;
+import com.tech4flag.community.dto.QuestionDTO;
 import com.tech4flag.community.model.User;
+import com.tech4flag.community.service.NotificationService;
 import com.tech4flag.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 public class ProfileController {
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private NotificationService notificationService;
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable(name = "action") String action, Model model, HttpServletRequest request,
                           @RequestParam(name = "page",defaultValue = "1") Integer page,
@@ -35,12 +40,17 @@ public class ProfileController {
         if(action.equals(questions)){
             model.addAttribute("section","questions");
             model.addAttribute("sectionName","我的提问");
+            PaginationDTO<QuestionDTO> paginationDTO = questionService.list(user.getId(), page, size);
+            model.addAttribute("pagination",paginationDTO);
         }else if (action.equals(replies)){
+            PaginationDTO<NotificationDTO> paginationDTO = notificationService.list(user.getId(),page,size);
+            Long unreadCount =notificationService.unreadCount(user.getId());
+            model.addAttribute("unreadCount",unreadCount);
+            model.addAttribute("paginationN",paginationDTO);
             model.addAttribute("section","replies");
             model.addAttribute("sectionName","最新回复");
         }
-        PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
-        model.addAttribute("pagination",paginationDTO);
+
 
         return "profile";
     }
