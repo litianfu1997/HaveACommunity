@@ -99,3 +99,13 @@ body {
     margin: 5px 5px;
     display: inline-block;
 }
+
+.bookName{
+    width: 600px;
+    text-overflow:ellipsis;/*设置超出部分显示...*/
+    -o-text-overflow:ellipsis;
+    overflow : hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}

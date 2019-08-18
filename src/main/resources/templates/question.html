@@ -6,10 +6,15 @@
     <link rel="stylesheet" href="/community/css/bootstrap.css"/>
     <link rel="stylesheet" href="/community/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/community/css/community.css">
+    <link rel="stylesheet" href="/community/css/editormd.preview.min.css" />
     <script src="/community/js/jquery3.4.1.js"></script>
     <script src="/community/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/community/js/moment.min.js"></script>
     <script src="/community/js/community.js"></script>
+
+    <script src="/community/js/editormd.min.js"></script>
+    <script src="/community/js/lib/marked.min.js"></script>
+    <script src="/community/js/lib/prettify.min.js"></script>
 
 </head>
 <body>
@@ -27,7 +32,20 @@
             </span>
 
                 <hr class="col-lg-19 col-md-12 col-sm-12 col-xs-12">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${question.description}"></div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="question-view">
+                    <textarea th:text="${question.description}" ></textarea>
+                </div>
+                <script type="text/javascript">
+                    $(function() {
+                        var testView = editormd.markdownToHTML("question-view", {
+                            // markdown : "[TOC]\n### Hello world!\n## Heading 2", // Also, you can dynamic set Markdown text
+                            // htmlDecode : true,  // Enable / disable HTML tag encode.
+                            // htmlDecode : "style,script,iframe",  // Note: If enabled, you should filter some dangerous HTML tags for website security.
+                        });
+                    });
+                </script>
+
                 <hr class="col-lg-19 col-md-12 col-sm-12 col-xs-12">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <span class="label label-info question-tags" th:each="tag:${question.tag.split(',')}">
