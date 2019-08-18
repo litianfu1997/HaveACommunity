@@ -2,6 +2,7 @@ package com.tech4flag.community.interceptor;
 
 import com.tech4flag.community.mapper.UserMapper;
 import com.tech4flag.community.model.User;
+import com.tech4flag.community.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 public class SessionInterceptor implements HandlerInterceptor {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private NotificationService notificationService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -33,6 +36,8 @@ public class SessionInterceptor implements HandlerInterceptor {
                     User user = userMapper.findByToken(token);
                     if (user != null) {
                         request.getSession().setAttribute("user", user);
+                        Long unreadCount = notificationService.unreadCount(user.getId());
+                        request.getSession().setAttribute("unreadCount",unreadCount);
                     }
                     break;
                 }
