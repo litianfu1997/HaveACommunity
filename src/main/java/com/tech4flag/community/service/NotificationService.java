@@ -2,8 +2,10 @@ package com.tech4flag.community.service;
 
 import com.tech4flag.community.dto.NotificationDTO;
 import com.tech4flag.community.dto.PaginationDTO;
-import com.tech4flag.community.dto.QuestionDTO;
+import com.tech4flag.community.enums.NotificationStatusEnum;
 import com.tech4flag.community.enums.NotificationTypeEnum;
+import com.tech4flag.community.exception.CustomizeErrorCode;
+import com.tech4flag.community.exception.CustomizeException;
 import com.tech4flag.community.mapper.NotificationMapper;
 import com.tech4flag.community.mapper.UserMapper;
 import com.tech4flag.community.model.Notification;
@@ -14,9 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author litianfu
@@ -32,7 +31,7 @@ public class NotificationService {
     private UserMapper userMapper;
 
     public  PaginationDTO<NotificationDTO> list(Integer userId, Integer page, Integer size) {
-
+        List<NotificationDTO> notificationDTOS = new ArrayList<>();
         PaginationDTO<NotificationDTO> paginationDTO = new PaginationDTO<>();
         Integer totalPage;
         Integer totalCount = notificationMapper.countByUserId(userId);
@@ -55,12 +54,12 @@ public class NotificationService {
         if (notifications.size() == 0){
             return paginationDTO;
         }
-        List<NotificationDTO> notificationDTOS = new ArrayList<>();
+
         for (Notification notification : notifications) {
             NotificationDTO notificationDTO =new NotificationDTO();
             BeanUtils.copyProperties(notification,notificationDTO);
-            notificationDTO.setType(NotificationTypeEnum.nameOfType(notification.getType()));
-            notificationDTO.setQuestionId(notification.getOuterId());
+            notificationDTO.setTypeName(NotificationTypeEnum.nameOfType(notification.getType()));
+            notificationDTO.setOuterId(notification.getOuterId());
             notificationDTOS.add(notificationDTO);
         }
         paginationDTO.setData(notificationDTOS);
@@ -68,7 +67,26 @@ public class NotificationService {
     }
 
     public Long unreadCount(Integer id) {
-        Integer count = notificationMapper.countByUserId(id);
+        Integer count = notificationMapper.unreadCountByUserId(id);
         return Long.valueOf(count);
+    }
+
+    public NotificationDTO read(Integer id, User user) {
+        Notification notification = notificationMapper.selectById(id);
+        if (notification==null){
+            throw new CustomizeException(CustomizeErrorCode.NOTIFICATION_NOT_FOUND);
+        }
+        if (!(notification.getReceiver().equals(user.getId()))){
+            throw new CustomizeException(CustomizeErrorCode.READ_NOTIFICATION_FAIL);
+        }
+        //更新已读信息
+        notification.setStatus(NotificationStatusEnum.READ.getStatus());
+        notificationMapper.updateStatus(notification);
+
+        NotificationDTO notificationDTO =new NotificationDTO();
+        BeanUtils.copyProperties(notification,notificationDTO);
+        notificationDTO.setTypeName(NotificationTypeEnum.nameOfType(notification.getType()));
+
+        return notificationDTO;
     }
 }

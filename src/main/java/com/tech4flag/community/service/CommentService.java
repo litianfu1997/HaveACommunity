@@ -69,7 +69,7 @@ public class CommentService {
             commentMapper.insert(comment);
             commentMapper.incCommentCount(parentComment);
             //创建通知
-            createNotify(comment, dbComment.getCommentator(), user.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT.getType());
+            createNotify(comment, dbComment.getCommentator(), user.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT.getType(), Math.toIntExact(dbComment.getParentId()));
         }else {
             //回复问题
             Question question = questionMapper.selectQuestionById(comment.getParentId());
@@ -81,19 +81,19 @@ public class CommentService {
             //回复问题数加一
             questionService.incComment(question.getId());
             //创建通知
-            createNotify(comment,question.getCreator(),user.getName(),question.getTitle(), NotificationTypeEnum.REPLY_QUESTION.getType());
+            createNotify(comment,question.getCreator(),user.getName(),question.getTitle(), NotificationTypeEnum.REPLY_QUESTION.getType(),question.getId());
         }
 //        commentMapper.insert(comment);
 
     }
 
-    private void createNotify(Comment comment, Integer receiver, String notifierName, String outerTitle, Integer type) {
+    private void createNotify(Comment comment, Integer receiver, String notifierName, String outerTitle, Integer type, Integer outerId) {
         //回复通知
         Notification notification =new Notification();
         notification.setGmtCreate(System.currentTimeMillis());
         notification.setType(type);
         //我回复的是谁的评论的id
-        notification.setOuterId(Math.toIntExact(comment.getParentId()));
+        notification.setOuterId(Math.toIntExact(outerId));
         //接收到通知的人
         notification.setNotifier(comment.getCommentator());
         //设置未读状态

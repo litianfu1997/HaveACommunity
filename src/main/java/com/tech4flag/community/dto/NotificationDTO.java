@@ -13,10 +13,11 @@ import lombok.Data;
 public class NotificationDTO {
     private Integer id;
     private Long gmtCreate;
-    private Integer questionId;
+    private Integer outerId;
     private Integer status;
     private Integer notifier;
     private String notifierName;
     private String outerTitle;
-    private String type;
+    private String typeName;
+    private Integer type;
 }

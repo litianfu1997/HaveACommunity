@@ -50,8 +50,6 @@ public class ProfileController {
             model.addAttribute("section","replies");
             model.addAttribute("sectionName","最新回复");
         }
-
-
         return "profile";
     }
 }
