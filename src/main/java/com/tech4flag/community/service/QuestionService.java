@@ -8,14 +8,17 @@ import com.tech4flag.community.mapper.QuestionMapper;
 import com.tech4flag.community.mapper.UserMapper;
 import com.tech4flag.community.model.Question;
 import com.tech4flag.community.model.User;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author litianfu
@@ -31,11 +34,25 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
+    private Integer totalCount;
+
+    private List<Question> questionList;
+
     public PaginationDTO<QuestionDTO> list(String search,Integer page, Integer size) {
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         Integer totalPage;
-        Integer totalCount = questionMapper.count();
+
+        if (StringUtils.isNotBlank(search)){
+            //将空格全部替换为 '|'
+            String[] tags = StringUtils.split(search, " ");
+            search = Arrays.stream(tags).collect(Collectors.joining("%"));
+            search = "%"+search+"%";
+            totalCount = questionMapper.countByTags(search);
+        }else {
+            totalCount = questionMapper.count();
+        }
+
         if (totalCount%size==0){
             totalPage = totalCount/size;
         }else {
@@ -50,7 +67,13 @@ public class QuestionService {
         }
         paginationDTO.setPagination(totalPage,page);
         Integer offset = size * (page - 1);
-        List<Question> questionList = questionMapper.list(offset,size);
+        if (StringUtils.isNotBlank(search)){
+
+            questionList = questionMapper.listByTags(search,offset,size);
+        }else {
+             questionList = questionMapper.list(offset,size);
+        }
+
         for (Question question : questionList) {
            User user = userMapper.findById(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();

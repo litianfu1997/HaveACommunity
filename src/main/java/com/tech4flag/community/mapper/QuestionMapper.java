@@ -86,4 +86,9 @@ public interface QuestionMapper {
      */
     @Select("select * from question where id=#{parentId}")
     Question selectQuestionById(@Param("parentId") Long parentId);
+
+    @Select("select count(1) from question where title like #{search} or tag like #{search}")
+    Integer countByTags(@Param("search")String search);
+    @Select("select * from question where title like #{search} or tag like #{search}  ORDER BY gmt_create DESC limit #{offset},#{size}")
+    List<Question> listByTags(@Param("search") String search, @Param("offset") Integer offset,@Param("size") Integer size);
 }
