@@ -29,14 +29,20 @@ public class FileController {
         MultipartHttpServletRequest mul =(MultipartHttpServletRequest) request;
         MultipartFile multipartFile =mul.getFile("editormd-image-file");
         try {
-            ucloudProvider.upload(multipartFile.getInputStream(),multipartFile.getContentType(),multipartFile.getOriginalFilename());
-        } catch (IOException e) {
+            String fileName = ucloudProvider.upload(multipartFile.getInputStream(), multipartFile.getContentType(), multipartFile.getOriginalFilename());
+            FileDTO fileDTO = new FileDTO();
+            fileDTO.setSuccess(1);
+            fileDTO.setMessage("上传成功");
+            fileDTO.setUrl(fileName);
+            return fileDTO;
+        } catch (Exception e) {
             e.printStackTrace();
         }
         FileDTO fileDTO = new FileDTO();
         fileDTO.setSuccess(1);
         fileDTO.setMessage("成功");
         fileDTO.setUrl("/community/img/timg.jpeg");
+
         return fileDTO;
     }
 }

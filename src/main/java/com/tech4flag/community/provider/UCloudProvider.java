@@ -8,6 +8,8 @@ import cn.ucloud.ufile.exception.UfileClientException;
 import cn.ucloud.ufile.exception.UfileServerException;
 import cn.ucloud.ufile.http.OnProgressListener;
 import com.sun.org.apache.regexp.internal.RE;
+import com.tech4flag.community.exception.CustomizeErrorCode;
+import com.tech4flag.community.exception.CustomizeException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,7 @@ public class UCloudProvider {
     private String publicKey;
     @Value("${ucloud.ufile.prik}")
     private String privateKey;
+    private String tech4flag;
 
     public String upload(InputStream fileStream,String mimeType,String fileName){
         String newName = "";
@@ -41,10 +44,11 @@ public class UCloudProvider {
             // Bucket相关API的授权器
             ObjectAuthorization OBJECT_AUTHORIZER = new UfileObjectLocalAuthorization(publicKey, privateKey);
             ObjectConfig config = new ObjectConfig("cn-gd", "ufileos.com");
+            tech4flag = "tech4flag";
             PutObjectResultBean response = UfileClient.object(OBJECT_AUTHORIZER, config)
                     .putObject(fileStream, mimeType)
                     .nameAs(newName)
-                    .toBucket("tech4flag")
+                    .toBucket(tech4flag)
                     /**
                      * 是否上传校验MD5, Default = true
                      */
@@ -64,14 +68,20 @@ public class UCloudProvider {
                     })
                     .execute();
                     if (response!=null && response.getRetCode() == 0){
-
+                        String url = UfileClient.object(OBJECT_AUTHORIZER,config)
+                                .getDownloadUrlFromPrivateBucket(newName,tech4flag,315360000)
+                                .createUrl();
+                        return url;
+                    }else {
+                        throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
                     }
         } catch (UfileClientException e) {
             e.printStackTrace();
+            throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         } catch (UfileServerException e) {
             e.printStackTrace();
+            throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         }
-        return newName;
     }
 
 
