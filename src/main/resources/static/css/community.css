@@ -109,3 +109,12 @@ body {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 }
+
+.footer{
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #666;
+}
