@@ -53,10 +53,12 @@ public class QuestionService {
             totalCount = questionMapper.count();
         }
 
-        if (totalCount%size==0){
+        if (totalCount==0){
+            totalPage=1;
+        }else if (totalCount%size==0&&totalCount!=0){
             totalPage = totalCount/size;
         }else {
-            totalPage = totalCount/size+1;
+            totalPage = (totalCount/size)+1;
         }
 
         if (page<1){
@@ -72,6 +74,9 @@ public class QuestionService {
             questionList = questionMapper.listByTags(search,offset,size);
         }else {
              questionList = questionMapper.list(offset,size);
+             if (questionList==null){
+                 return null;
+             }
         }
 
         for (Question question : questionList) {
