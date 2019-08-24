@@ -28,7 +28,7 @@ function comment2target(targetId,type,content) {
                 if (res.code == 2003){
                     var b = confirm(res.message);
                     if (b){
-                        window.open("https://github.com/login/oauth/authorize?client_id=979d5293cbf3c4a4c977&redirect_uri=http://www.tech4flag.com:8080/community/callback&scope=user&state=1")
+                        window.open("https://github.com/login/oauth/authorize?client_id=979d5293cbf3c4a4c977&redirect_uri=http://www.tech4flag.com/community/callback&scope=user&state=1")
                         window.localStorage.setItem("closable","true");
                     }
                 } else {
