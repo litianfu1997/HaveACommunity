@@ -35,10 +35,12 @@ public class NotificationService {
         PaginationDTO<NotificationDTO> paginationDTO = new PaginationDTO<>();
         Integer totalPage;
         Integer totalCount = notificationMapper.countByUserId(userId);
-        if (totalCount%size==0){
+        if (totalCount==0){
+            totalPage=1;
+        }else if (totalCount%size==0){
             totalPage = totalCount/size;
         }else {
-            totalPage = totalCount/size+1;
+            totalPage = (totalCount/size)+1;
         }
 
         if (page<1){

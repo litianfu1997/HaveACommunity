@@ -9,7 +9,14 @@
     <!--<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.js"></script>-->
     <script src="/community/js/jquery3.4.1.js"></script>
     <script src="/community/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/community/js/community.js"></script>
 </head>
+<script>
+    window.onload = function(){
+        console.log("onload")
+        likedListByPost()
+    }
+</script>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
 
@@ -29,12 +36,15 @@
                         <a th:href="@{'/question/'+${question.id}}">
                             <h4 class="media-heading" th:text="${question.title}"></h4>
                         </a>
-                        <span>
-                            <text th:text="${question.description}" class="bookName"></text>
-                        </span>
-                        <span class="text-desc"><span th:text="${question.commentCount}"></span>个回复 - <span
-                                th:text="${question.viewCount}"></span>次浏览 - <span
-                                th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm:ss')}"></span></span>
+
+                        <span class="text-desc">
+                        <span class="glyphicon glyphicon-thumbs-up icon"
+                              onclick="like(this)" th:data-id="${question.id}" th:data-list="${session.likeList}" th:id="${'like-'+question.id}"></span>
+                        <span th:id="${'likeNum-'+question.id}" th:text="${question.likeCount}"></span> |
+                        <span th:text="${question.commentCount}"></span>个回复 -
+                        <span th:text="${question.viewCount}"></span>次浏览 -
+                        <span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm:ss')}"></span>
+                    </span>
                     </div>
                     <hr>
                 </div>

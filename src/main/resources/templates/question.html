@@ -11,12 +11,17 @@
     <script src="/community/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/community/js/moment.min.js"></script>
     <script src="/community/js/community.js"></script>
-
     <script src="/community/js/editormd.min.js"></script>
     <script src="/community/js/lib/marked.min.js"></script>
     <script src="/community/js/lib/prettify.min.js"></script>
 
 </head>
+<script>
+    window.onload = function(){
+        console.log("question onload")
+        commentLikedListByPost()
+    }
+</script>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
 <div class="container-fluid main profile">
@@ -82,7 +87,8 @@
                             </h5>
                             <div th:text="${comment.getContent()}"></div>
                             <div class="menu">
-                                <span class="glyphicon glyphicon-thumbs-up icon"></span>
+                                <span th:id="${'commentLike-'+comment.id}" th:data-id="${comment.id}" onclick="commentLikeCount(this)" class="glyphicon glyphicon-thumbs-up icon"></span>
+                                <span th:id="${'commentLikeNum-'+comment.id}" th:text="${comment.likeCount}"></span> |
                                 <span th:data-id="${comment.id}" onclick="collapseComments(this)" class="icon">
                                     <span class="glyphicon glyphicon-comment"></span>
                                     <span  th:text="${comment.getCommentCount()}"></span>

@@ -9,6 +9,7 @@
     <!--<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.js"></script>-->
     <script src="/community/js/jquery3.4.1.js"></script>
     <script src="/community/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/community/js/community.js"></script>
 </head>
 <script type="application/javascript">
     window.onload = function (ev) {
@@ -17,6 +18,12 @@
             window.close();
             window.localStorage.removeItem("closable");
         }
+    }
+</script>
+<script>
+    window.onload = function(){
+        console.log("index onload")
+        likedListByPost()
     }
 </script>
 <body>
@@ -37,11 +44,14 @@
                     <h4 class="media-heading" >
                         <a th:href="@{'/question/'+${question.id}}" th:text="${question.title}"></a>
                     </h4>
-                    <span >
-                        <text th:text="${question.description}" class="bookName"></text>
+                    <span class="text-desc">
+                        <span class="glyphicon glyphicon-thumbs-up icon"
+                              onclick="like(this)" th:data-id="${question.id}" th:data-list="${session.likeList}" th:id="${'like-'+question.id}"></span>
+                        <span th:id="${'likeNum-'+question.id}" th:text="${question.likeCount}"></span> |
+                        <span th:text="${question.commentCount}"></span>个回复 -
+                        <span th:text="${question.viewCount}"></span>次浏览 -
+                        <span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm:ss')}"></span>
                     </span>
-
-                    <span class="text-desc"><span th:text="${question.commentCount}"></span>个回复 - <span th:text="${question.viewCount}"></span>次浏览 - <span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm:ss')}"></span></span>
                 </div>
                 <hr>
             </div>

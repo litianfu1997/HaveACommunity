@@ -59,6 +59,9 @@ public interface QuestionMapper {
     @Update("update question set title=#{title},description=#{description},gmt_modified=#{gmtModified},tag=#{tag} where id=#{id}")
     Integer update(Question question);
 
+    @Update("update question set like_count=like_count+1 where id=#{id}")
+    Integer updateLikeCount(Question question);
+
     @Update("update question set view_count=view_count+1 where id=#{id}")
     Integer updateViewCount(Question question);
 

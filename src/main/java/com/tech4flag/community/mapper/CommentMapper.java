@@ -44,4 +44,11 @@ public interface CommentMapper {
      */
     @Update("update comment set comment_count = comment_count+1 where id=#{id}")
     void incCommentCount(Comment comment);
+
+
+    @Select("select * from comment where id = #{id}")
+    Comment getById(@Param("id") Integer id);
+
+    @Update("update comment set like_count=like_count+1 where id=#{id}")
+    void updateLikeCount(Comment comment);
 }

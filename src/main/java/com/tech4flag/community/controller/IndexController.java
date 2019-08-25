@@ -2,6 +2,8 @@ package com.tech4flag.community.controller;
 
 import com.tech4flag.community.dto.PaginationDTO;
 import com.tech4flag.community.dto.QuestionDTO;
+import com.tech4flag.community.dto.QuestionFlag;
+import com.tech4flag.community.mapper.QuestionLikeCountMapper;
 import com.tech4flag.community.service.NotificationService;
 import com.tech4flag.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ public class IndexController {
     private QuestionService questionService;
 
 
+
     @GetMapping("/index")
     public String index(HttpServletRequest request, Model model,
                         @RequestParam(name = "page",defaultValue = "1") Integer page,
@@ -35,6 +38,7 @@ public class IndexController {
         PaginationDTO<QuestionDTO> pagination = questionService.list(search,page,size);
         model.addAttribute("pagination",pagination);
         model.addAttribute("search",search);
+
         return "index";
     }
 }

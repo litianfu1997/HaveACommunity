@@ -1,5 +1,7 @@
 package com.tech4flag.community.interceptor;
 
+import com.tech4flag.community.dto.QuestionFlag;
+import com.tech4flag.community.mapper.QuestionLikeCountMapper;
 import com.tech4flag.community.mapper.UserMapper;
 import com.tech4flag.community.model.User;
 import com.tech4flag.community.service.NotificationService;
@@ -12,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author litianfu
@@ -25,7 +28,8 @@ public class SessionInterceptor implements HandlerInterceptor {
     private UserMapper userMapper;
     @Autowired
     private NotificationService notificationService;
-
+    @Autowired
+    private QuestionLikeCountMapper questionLikeCountMapper;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Cookie[] cookies = request.getCookies();
@@ -38,6 +42,8 @@ public class SessionInterceptor implements HandlerInterceptor {
                         request.getSession().setAttribute("user", user);
                         Long unreadCount = notificationService.unreadCount(user.getId());
                         request.getSession().setAttribute("unreadCount",unreadCount);
+                        List<QuestionFlag> LikedList = questionLikeCountMapper.isLikedByUserId(user.getId());
+                        request.getSession().setAttribute("likeList",LikedList);
                     }
                     break;
                 }
