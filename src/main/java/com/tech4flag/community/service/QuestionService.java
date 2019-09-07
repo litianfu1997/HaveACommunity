@@ -38,10 +38,14 @@ public class QuestionService {
 
     private List<Question> questionList;
 
-    public PaginationDTO<QuestionDTO> list(String search,Integer page, Integer size) {
+    public PaginationDTO<QuestionDTO> list(String search,String tag,Integer page, Integer size) {
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         Integer totalPage;
+
+        if (StringUtils.isBlank(search)&&StringUtils.isBlank(tag)){
+            totalCount = questionMapper.count();
+        }
 
         if (StringUtils.isNotBlank(search)){
             //将空格全部替换为 '|'
@@ -49,8 +53,10 @@ public class QuestionService {
             search = Arrays.stream(tags).collect(Collectors.joining("%"));
             search = "%"+search+"%";
             totalCount = questionMapper.countByTags(search);
-        }else {
-            totalCount = questionMapper.count();
+        }
+
+        if (StringUtils.isNotBlank(tag)){
+            totalCount = questionMapper.countByHotTag(tag);
         }
 
         if (totalCount==0){
@@ -69,14 +75,19 @@ public class QuestionService {
         }
         paginationDTO.setPagination(totalPage,page);
         Integer offset = size * (page - 1);
-        if (StringUtils.isNotBlank(search)){
 
+        if (StringUtils.isBlank(search)&&StringUtils.isBlank(tag)){
+            questionList = questionMapper.list(offset,size);
+            if (questionList==null){
+                return null;
+            }
+        }
+
+        if (StringUtils.isNotBlank(search)){
             questionList = questionMapper.listByTags(search,offset,size);
-        }else {
-             questionList = questionMapper.list(offset,size);
-             if (questionList==null){
-                 return null;
-             }
+        }
+        if (StringUtils.isNotBlank(tag)){
+            questionList = questionMapper.listByHotTag(tag,offset,size);
         }
 
         for (Question question : questionList) {
@@ -192,4 +203,6 @@ public class QuestionService {
         Question question = questionMapper.getById(id);
         questionMapper.updateCommentCount(question);
     }
+
+
 }

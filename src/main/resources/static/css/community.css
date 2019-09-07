@@ -56,6 +56,9 @@ body {
     font-size: 15px;
     cursor: pointer;
 }
+.icon-i{
+    cursor: pointer;
+}
 
 .menu .active{
     color: #499ef3;
@@ -119,5 +122,6 @@ body {
     color: #666;
 }
 .active-like{
+    cursor: pointer;
     color: #499ef3;
 }

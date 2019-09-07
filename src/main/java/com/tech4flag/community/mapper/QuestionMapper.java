@@ -36,6 +36,13 @@ public interface QuestionMapper {
     void create(Question question);
 
     /**
+     * 查询所有问题
+     * @return
+     */
+    @Select("select * from question ORDER BY gmt_create DESC")
+    List<Question> allList();
+
+    /**
      * 查询问题列表
      * @param offset
      * @param size
@@ -92,6 +99,13 @@ public interface QuestionMapper {
 
     @Select("select count(1) from question where title like #{search} or tag like #{search}")
     Integer countByTags(@Param("search")String search);
-    @Select("select * from question where title like #{search} or tag like #{search}  ORDER BY gmt_create DESC limit #{offset},#{size}")
+
+    @Select("select count(1) from question where tag = #{tag}")
+    Integer countByHotTag(@Param("tag")String tag);
+
+    @Select("select * from question where title like #{search}  ORDER BY gmt_create DESC limit #{offset},#{size}")
     List<Question> listByTags(@Param("search") String search, @Param("offset") Integer offset,@Param("size") Integer size);
+
+    @Select("select * from question where tag=#{tag}   ORDER BY gmt_create DESC limit #{offset},#{size}")
+    List<Question> listByHotTag(@Param("tag") String tag, @Param("offset") Integer offset,@Param("size") Integer size);
 }
