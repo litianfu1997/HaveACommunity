@@ -100,12 +100,12 @@ public interface QuestionMapper {
     @Select("select count(1) from question where title like #{search} or tag like #{search}")
     Integer countByTags(@Param("search")String search);
 
-    @Select("select count(1) from question where tag = #{tag}")
+    @Select("select count(1) from question where tag like #{tag}")
     Integer countByHotTag(@Param("tag")String tag);
 
     @Select("select * from question where title like #{search}  ORDER BY gmt_create DESC limit #{offset},#{size}")
     List<Question> listByTags(@Param("search") String search, @Param("offset") Integer offset,@Param("size") Integer size);
 
-    @Select("select * from question where tag=#{tag}   ORDER BY gmt_create DESC limit #{offset},#{size}")
+    @Select("select * from question where tag like #{tag}   ORDER BY gmt_create DESC limit #{offset},#{size}")
     List<Question> listByHotTag(@Param("tag") String tag, @Param("offset") Integer offset,@Param("size") Integer size);
 }

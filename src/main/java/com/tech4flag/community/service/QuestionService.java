@@ -56,6 +56,7 @@ public class QuestionService {
         }
 
         if (StringUtils.isNotBlank(tag)){
+            tag = "%"+tag+"%";
             totalCount = questionMapper.countByHotTag(tag);
         }
 
