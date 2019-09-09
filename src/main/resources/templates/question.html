@@ -32,7 +32,7 @@
                 <h3 class="question-title"><span th:text="${question.title}"></span></h3>
                 <span class="text-desc">
                 作者：<span th:text="${question.user.name}"></span> |
-                发布时间：<span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd hh:mm:ss')}"></span> |
+                发布时间：<span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm:ss')}"></span> |
                 阅读数：<span th:text="${question.viewCount}"></span>次浏览
             </span>
 
