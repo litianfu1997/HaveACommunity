@@ -7,6 +7,7 @@ import com.tech4flag.community.dto.QuestionFlag;
 import com.tech4flag.community.mapper.QuestionLikeCountMapper;
 import com.tech4flag.community.service.NotificationService;
 import com.tech4flag.community.service.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -38,10 +41,24 @@ public class IndexController {
                         @RequestParam(name = "page",defaultValue = "1") Integer page,
                         @RequestParam(name = "size",defaultValue = "10") Integer size,
                         @RequestParam(name = "search",required = false) String search,
-                        @RequestParam(name = "tag",required = false) String tag) {
-        PaginationDTO<QuestionDTO> pagination = questionService.list(search,tag,page,size);
-        List<String> tags = hotTagCache.getHots();
+                        @RequestParam(name = "tag",required = false) String tag,
+                        @RequestParam(name = "type",required = false) String type) {
 
+        PaginationDTO<QuestionDTO> pagination = questionService.list(type,search,tag,page,size);
+        List<String> tags = hotTagCache.getHots();
+        if (StringUtils.isNotBlank(type)){
+            switch (type){
+                case "hot":
+                    model.addAttribute("type",type);
+                    break;
+                case "hotweek":
+                    model.addAttribute("type",type);
+                    break;
+                case "noreply":
+                    model.addAttribute("type",type);
+                    break;
+            }
+        }
         model.addAttribute("pagination",pagination);
         model.addAttribute("search",search);
         model.addAttribute("tags",tags);

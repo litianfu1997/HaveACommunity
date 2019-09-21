@@ -65,12 +65,12 @@ public class QuestionDTO implements Comparable<QuestionDTO>{
      */
     @Override
     public int compareTo(QuestionDTO o) {
-        if (null==this.getGmtCreate()){
+        if (null==this.getCommentCount()){
             return 1;
         }
-        if (null==o.gmtCreate){
+        if (null==o.commentCount){
             return -1;
         }
-        return o.gmtCreate.compareTo(this.gmtCreate);
+        return o.commentCount.compareTo(this.commentCount);
     }
 }

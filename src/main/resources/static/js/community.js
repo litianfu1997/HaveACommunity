@@ -202,3 +202,40 @@ function selectTag(e) {
     }
 
 }
+function clickTab(obj) {
+    switch (obj.id) {
+        case "new-item":
+            $("#hot").removeClass("active");
+            $("#hot-zhou").removeClass("active");
+            $("#noreply").removeClass("active");
+            $("#new-item").addClass("active");
+            console.log(obj.id);
+            // $.get("/community/index");
+            break;
+        case "hot-zhou":
+            $("#hot").removeClass("active");
+            $("#new-item").removeClass("active");
+            $("#noreply").removeClass("active");
+            $("#"+obj.id).addClass("active");
+            console.log(obj.id);
+            // $.get("/community/index?type=hotweek");
+            break;
+        case  "hot":
+            $("#new-item").removeClass("active");
+            $("#hot-zhou").removeClass("active");
+            $("#noreply").removeClass("active");
+            $("#"+obj.id).addClass("active");
+            console.log(obj.id);
+            // $.get("/community/index?type=hot");
+            break;
+
+        case "noreply":
+            $("#hot").removeClass("active");
+            $("#hot-zhou").removeClass("active");
+            $("#new-item").removeClass("active");
+            $("#"+obj.id).addClass("active");
+            console.log(obj.id);
+            // $.get("/community/index?type=noreply");
+            break;
+    }
+}

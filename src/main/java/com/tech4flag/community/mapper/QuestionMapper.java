@@ -108,4 +108,13 @@ public interface QuestionMapper {
 
     @Select("select * from question where tag like #{tag}   ORDER BY gmt_create DESC limit #{offset},#{size}")
     List<Question> listByHotTag(@Param("tag") String tag, @Param("offset") Integer offset,@Param("size") Integer size);
+
+    @Select("select * from question ORDER BY comment_count DESC limit #{offset},#{size}")
+    List<Question> listByHot( @Param("offset") Integer offset,@Param("size") Integer size);
+
+    @Select("select * from question where comment_count=0  ORDER BY gmt_create DESC limit #{offset},#{size}")
+    List<Question> listByNoReply( @Param("offset") Integer offset,@Param("size") Integer size);
+
+    @Select("select * from question ORDER BY view_count DESC limit #{offset},#{size}")
+    List<Question> listByViewCount( @Param("offset") Integer offset,@Param("size") Integer size);
 }

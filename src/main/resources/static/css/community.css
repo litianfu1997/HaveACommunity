@@ -125,3 +125,11 @@ body {
     cursor: pointer;
     color: #499ef3;
 }
+.con-row{
+    display: flex;
+    flex-direction: row;
+}
+.items-top{
+    align-items: center;
+    justify-content: space-between;
+}

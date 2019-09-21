@@ -38,7 +38,7 @@ public class QuestionService {
 
     private List<Question> questionList;
 
-    public PaginationDTO<QuestionDTO> list(String search,String tag,Integer page, Integer size) {
+    public PaginationDTO<QuestionDTO> list(String type,String search,String tag,Integer page, Integer size) {
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         Integer totalPage;
@@ -59,6 +59,7 @@ public class QuestionService {
             tag = "%"+tag+"%";
             totalCount = questionMapper.countByHotTag(tag);
         }
+
 
         if (totalCount==0){
             totalPage=1;
@@ -81,6 +82,15 @@ public class QuestionService {
             questionList = questionMapper.list(offset,size);
             if (questionList==null){
                 return null;
+            }
+        }
+        if (StringUtils.isNotBlank(type)){
+            if ("hot".equals(type)){
+                questionList = questionMapper.listByHot(offset, size);
+            }else if ("hotweek".equals(type)){
+                questionList = questionMapper.listByViewCount(offset,size);
+            }else if ("noreply".equals(type)){
+                questionList = questionMapper.listByNoReply(offset,size);
             }
         }
 
