@@ -43,7 +43,7 @@ public class QuestionService {
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         Integer totalPage;
 
-        if (StringUtils.isBlank(search)&&StringUtils.isBlank(tag)){
+        if (StringUtils.isBlank(search)&&StringUtils.isBlank(tag)&&StringUtils.isBlank(type)){
             totalCount = questionMapper.count();
         }
 
@@ -78,7 +78,7 @@ public class QuestionService {
         paginationDTO.setPagination(totalPage,page);
         Integer offset = size * (page - 1);
 
-        if (StringUtils.isBlank(search)&&StringUtils.isBlank(tag)){
+        if (StringUtils.isBlank(search)&&StringUtils.isBlank(tag)&&StringUtils.isBlank(type)){
             questionList = questionMapper.list(offset,size);
             if (questionList==null){
                 return null;
@@ -109,7 +109,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        Collections.sort(questionDTOList);
+
         paginationDTO.setData(questionDTOList);
         return paginationDTO;
     }

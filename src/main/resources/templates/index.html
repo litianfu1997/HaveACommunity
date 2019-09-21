@@ -41,7 +41,7 @@
                     <li id="noreply" role="presentation" th:class="${type == 'noreply'? 'active':''}" onclick="clickTab(this)"><a href="/community/index?type=noreply">消灭0回复</a></li>
                 </ul>
             </div>
-
+            <hr style="margin-top: 0">
             <div class="media" th:each="question:${pagination.getData()}">
                 <div class="media-left img-size">
                     <a href="#">
