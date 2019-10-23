@@ -101,9 +101,15 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>5.2.4</version>
                 <configuration>
-                    <url>jdbc:h2:~/community</url>
-                    <user>sa</user>
-                    <password>123</password>
+                    <driver>com.mysql.cj.jdbc.Driver</driver>
+                    <url>jdbc:mysql://localhost/community?useUnicode=true&amp;characterEncoding=utf-8</url>
+                    <user>root</user>
+                    <password>19971005</password>
+                    <!-- 设置接受flyway进行版本管理的数据库，多个数据库以逗号分隔 -->
+                    <schemas>flywaydemo</schemas>
+                    <!-- 设置sql脚本文件的编码 -->
+                    <encoding>UTF-8</encoding>
+
                 </configuration>
                 <dependencies>
                     <dependency>
