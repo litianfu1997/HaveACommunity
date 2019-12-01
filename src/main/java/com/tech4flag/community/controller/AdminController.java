@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
@@ -46,5 +47,12 @@ public class AdminController {
         //data代表我们的数据格式为数组
         map.put("data",list);
         return map;
+    }
+
+    @RequestMapping("/remove")
+    @ResponseBody
+    public void remove(@RequestParam("questionId")Integer id){
+        adminQuestionService.remove(id);
+        System.out.println("进入删除控制层："+id);
     }
 }

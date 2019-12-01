@@ -19,7 +19,8 @@ public class HotTagCache {
     private  Map<String,Integer> tags = new HashMap<>();
     private List<String> hots =new ArrayList<>();
     public void updateTags(Map<String,Integer> tags){
-        int max = 5;
+        //热门标签数
+        int max = 10;
         PriorityQueue<HotTagDTO> priorityQueue = new PriorityQueue<>();
         tags.forEach(
                 (name,priority)->{

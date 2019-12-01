@@ -2,10 +2,7 @@ package com.tech4flag.community.mapper;
 
 import com.tech4flag.community.dto.QuestionFlag;
 import com.tech4flag.community.model.Question;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -29,4 +26,7 @@ public interface QuestionLikeCountMapper {
 
     @Select("select * from questionlikecount where user_id=#{userId}")
     List<QuestionFlag> isLikedByUserId(@Param("userId") Integer userId);
+
+    @Delete("delete from questionlikecount where question_id = #{id}")
+    void removeById(@Param("id") Integer id);
 }

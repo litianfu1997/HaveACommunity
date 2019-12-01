@@ -6,11 +6,11 @@
     <link rel="stylesheet" href="/community/css/bootstrap.css"/>
     <link rel="stylesheet" href="/community/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/community/css/community.css">
+    <link rel="icon" href="/community/img/favicon.ico" type="image/x-ico">
     <!--<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.js"></script>-->
     <script src="/community/js/jquery3.4.1.js"></script>
     <script src="/community/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/community/js/community.js"></script>
-    <script data-ad-client="ca-pub-8807064956079999" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 <script type="application/javascript">
     window.onload = function (ev) {
@@ -98,21 +98,19 @@
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
                 <h4 style="margin-top: 20px; margin-bottom: 20px;">推荐内容</h4>
-                <h5>70华诞，风华正茂。</h5>
-                <h5>历经沧桑，必将复兴。</h5>
-                <h5>祝福伟大的祖国繁荣昌盛，国泰民安。</h5>
-                <img style="display: none;"  class="ad-img thumbnail" src="http://tech4flag.cn-gd.ufileos.com/sjw.gif?UCloudPublicKey=x7Qo4UK4iU8zzDNFuwpRMHne26AjIPH3y2dG0l1g&Signature=f6EAXeh8KL0C%2FYO7ygrTZ9gQpsY%3D&Expires=1568564299">
-                <img class="ad-img thumbnail" src="/community/img/guoqi1.png">
-                <img class="ad-img thumbnail" src="/community/img/guoqi.jpg">
+                <img  class="ad-img thumbnail" src="http://tech4flag.cn-gd.ufileos.com/sjw.gif?UCloudPublicKey=x7Qo4UK4iU8zzDNFuwpRMHne26AjIPH3y2dG0l1g&Signature=f6EAXeh8KL0C%2FYO7ygrTZ9gQpsY%3D&Expires=1568564299">
+
 
             </div>
             <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
                 <h4>热门标签</h4>
-                    <ul class="question-related">
-                        <li th:each="tag: ${tags}">
-                            <a th:href="@{/index(page=1,search=${search},tag=${tag})}" th:text="${tag}"></a>
+                    <div class="question-related" >
+                        <li th:each="tag: ${tags}"  style="margin: 4px;">
+                            <span class="label label-info" style="margin: 5px;">
+                                <a style="text-decoration: none; color: #fff;" th:href="@{/index(page=1,search=${search},tag=${tag})}" th:text="${tag}"></a>
+                            </span>
                         </li>
-                    </ul>
+                    </div>
             </div>
 
 

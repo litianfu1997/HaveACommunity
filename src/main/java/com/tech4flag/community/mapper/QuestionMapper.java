@@ -117,4 +117,7 @@ public interface QuestionMapper {
 
     @Select("select * from question ORDER BY view_count DESC limit #{offset},#{size}")
     List<Question> listByViewCount( @Param("offset") Integer offset,@Param("size") Integer size);
+
+    @Delete("delete from question where id = #{id}")
+    void removeById(@Param("id") Integer id);
 }

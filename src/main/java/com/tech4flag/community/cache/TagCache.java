@@ -22,6 +22,10 @@ public class TagCache {
         program.setCategoryName("开发语言");
         program.setTags(Arrays.asList("javascript","php","css","html","html5","java","node.js","python","c++","c","golang","objective-c","typescript","shell","c#","swift","sass","bash","ruby","less","asp.net","lua","scala","coffeescript","actionscript","rust","erlang","perl"));
         tagDTOS.add(program);
+        TagDTO programLive = new TagDTO();
+        programLive.setCategoryName("程序人生");
+        programLive.setTags(Arrays.asList("开发心得","数据结构","编程随想","人生感悟","职场吐槽"));
+        tagDTOS.add(programLive);
         TagDTO framework = new TagDTO();
         framework.setCategoryName("平台框架");
         framework.setTags(Arrays.asList("laravel","spring","express","django","flask","yii","ruby-on-rails tornado","koa","struts"));

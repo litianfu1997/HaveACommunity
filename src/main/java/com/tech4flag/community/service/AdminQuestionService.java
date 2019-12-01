@@ -1,7 +1,7 @@
 package com.tech4flag.community.service;
 
 import com.tech4flag.community.dto.AdminQuestionDTO;
-import com.tech4flag.community.dto.QuestionDTO;
+import com.tech4flag.community.mapper.QuestionLikeCountMapper;
 import com.tech4flag.community.mapper.QuestionMapper;
 import com.tech4flag.community.mapper.UserMapper;
 import com.tech4flag.community.model.Question;
@@ -9,6 +9,7 @@ import com.tech4flag.community.model.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,10 @@ public class AdminQuestionService {
 
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionLikeCountMapper questionLikeCountMapper;
+
     @Autowired
     private UserMapper userMapper;
 
@@ -43,5 +48,12 @@ public class AdminQuestionService {
     public Integer count() {
         Integer count = questionMapper.count();
         return count;
+    }
+    @Transactional
+    public void remove(Integer id) {
+        //先删除子表依赖
+        questionLikeCountMapper.removeById(id);
+        //再删除主表数据
+        questionMapper.removeById(id);
     }
 }
