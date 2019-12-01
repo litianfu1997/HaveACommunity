@@ -39,20 +39,56 @@ public interface QuestionMapper {
      * 查询所有问题
      * @return
      */
-    @Select("select * from question ORDER BY gmt_create DESC")
+    @Select("select * from question where isPass = 1 ORDER BY gmt_create DESC")
     List<Question> allList();
 
     /**
-     * 查询问题列表
+     * 已审核的问题列表
      * @param offset
      * @param size
      * @return
      */
-    @Select("select * from question ORDER BY gmt_create DESC limit #{offset},#{size}")
+    @Select("select * from question where isPass = 1 ORDER BY gmt_create DESC limit #{offset},#{size}")
     List<Question> list(@Param(value = "offset") Integer offset,@Param(value = "size") Integer size);
 
-    @Select("select count(1) from question")
+    /**
+     * 未审核文章列表
+     * @param offset
+     * @param size
+     * @return
+     */
+    @Select("select * from question where isPass = 0 ORDER BY gmt_create DESC limit #{offset},#{size}")
+    List<Question> uncheckList(@Param(value = "offset") Integer offset,@Param(value = "size") Integer size);
+
+    /**
+     * 全部文章列表
+     * @param offset
+     * @param size
+     * @return
+     */
+    @Select("select * from question  ORDER BY gmt_create DESC limit #{offset},#{size}")
+    List<Question> allQuestionList(@Param(value = "offset") Integer offset,@Param(value = "size") Integer size);
+
+    /**
+     * 已审核的文章数量
+     * @return
+     */
+    @Select("select count(1) from question where isPass = 1")
     Integer count();
+
+    /**
+     * 未审核的文章数量
+     * @return
+     */
+    @Select("select count(1) from question where isPass = 0")
+    Integer unCount();
+
+    /**
+     * 全部的文章数量
+     * @return
+     */
+    @Select("select count(1) from question ")
+    Integer allCount();
 
     @Select("select * from question where creator = #{userId} ORDER BY gmt_create DESC limit #{offset},#{size}")
     List<Question> listByUserId(@Param(value = "userId") Integer userId,@Param(value = "offset") Integer offset,@Param(value = "size") Integer size);
@@ -78,7 +114,7 @@ public interface QuestionMapper {
      * @param tagRegexp
      * @return
      */
-    @Select("select id,title,tag from question where tag regexp #{tagRegexp} and id != #{id}")
+    @Select("select id,title,tag from question where isPass = 1 and tag regexp #{tagRegexp} and id != #{id}")
     List<Question> relevantQuestion(@Param("id") Integer id,@Param("tagRegexp") String tagRegexp);
 
     /**

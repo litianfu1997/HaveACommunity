@@ -8,8 +8,23 @@
     <script src="/community/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
+    <div style="display: flex;flex-direction: row;">
+        <ul class="layui-nav layui-nav-tree" lay-filter="test" style="margin-top: 10px;">
+            <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
+            <li class="layui-nav-item layui-this"><a onclick="uncheck()">未审核文章</a></li>
+            <li class="layui-nav-item"><a onclick="check()">已审核文章</a></li>
+            <li class="layui-nav-item"><a onclick="allQuestion()">全部文章</a></li>
+            <li class="layui-nav-item"><a>其他</a></li>
+        </ul>
+        <div style="flex: 1;">
+            <table  id="main-table" lay-filter="userTable"></table>
+        </div>
+    </div>
 
-<table id="main-table" lay-filter="userTable"></table>
+
+
+
+
 <div id="toolbarTop" style="display: none;">
     <div class="layui-btn-group">
         <button type="button" class="layui-btn layui-btn-sm" lay-event='add'>添加</button>
@@ -17,23 +32,32 @@
     </div>
 </div>
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">审核</a>
     <a class="layui-btn layui-btn-xs" lay-event="look">查看</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
+    <script type="text/html" id="uncheckBar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">审核</a>
+        <a class="layui-btn layui-btn-xs" lay-event="look">查看</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
 
 <script type="text/javascript">
+    var url = 'http://localhost:9000/community/uncheckList'
     layui.use(['table', 'layer', 'jquery','element'], function() {
         var $ = layui.jquery;
         var table = layui.table;
         var layer = layui.layer;
         var element = layui.element;
 
+
+
+        console.log(url)
+
         //第一个实例
         table.render({
             elem: '#main-table'
             ,
-            url: 'http://localhost:9000/community/questionListAdmin' //数据接口
+            url: url //数据接口
             ,
             page: true //开启分页
             ,
@@ -53,33 +77,34 @@
                 }, {
                     field: 'name',
                     title: '作者',
-
+                    width:100
                 }, {
                     field: 'title',
                     title: '标题',
                     sort: true,
-
                 }, {
                     field: 'gmtCreate',
                     title: '发布时间',
                     templet:function (obj) {
                         var date = new Date(obj.gmtCreate).Format("yyyy-MM-dd hh:mm:ss");
                         return date
-                    }
+                    },
 
                 }, {
                     field: 'viewCount',
                     title: '观看数',
+                    width:100
 
                 }, {
                     field: 'likeCount',
                     title: '点赞数',
                     sort: true,
+                    width:100
 
                 },{
                     fixed: 'right',
                     title: '操作',
-                    toolbar: '#barDemo'
+                    toolbar: '#uncheckBar'
 
                 }
                 ]
@@ -101,7 +126,7 @@
                 if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
             return fmt;
         }
-            //监听头部工具栏事件
+        //监听头部工具栏事件
         table.on("toolbar(userTable)", function(obj) {
             // console.log(obj.event)
             // layer.msg("大家好")
@@ -156,6 +181,433 @@
             }
         });
     });
+    function uncheck(){
+        url = 'http://localhost:9000/community/uncheckList'
+        layui.use(['table', 'layer', 'jquery','element'], function() {
+            var $ = layui.jquery;
+            var table = layui.table;
+            var layer = layui.layer;
+            var element = layui.element;
+
+
+
+            console.log(url)
+
+            //第一个实例
+            table.render({
+                elem: '#main-table'
+                ,
+                url: url //数据接口
+                ,
+                page: true //开启分页
+                ,
+                toolbar: "#toolbarTop",
+                totalRow: true,
+                cols: [
+                    [ //表头
+                        {
+                            type: 'checkbox',
+                            fixed: 'left'
+                        }, {
+                        field: 'id',
+                        title: 'ID',
+                        sort: true,
+                        fixed: 'left',
+                        width:100
+                    }, {
+                        field: 'name',
+                        title: '作者',
+                        width:100
+                    }, {
+                        field: 'title',
+                        title: '标题',
+                        sort: true,
+                    }, {
+                        field: 'gmtCreate',
+                        title: '发布时间',
+                        templet:function (obj) {
+                            var date = new Date(obj.gmtCreate).Format("yyyy-MM-dd hh:mm:ss");
+                            return date
+                        },
+
+                    }, {
+                        field: 'viewCount',
+                        title: '观看数',
+                        width:100
+
+                    }, {
+                        field: 'likeCount',
+                        title: '点赞数',
+                        sort: true,
+                        width:100
+
+                    },{
+                        fixed: 'right',
+                        title: '操作',
+                        toolbar: '#uncheckBar'
+
+                    }
+                    ]
+                ]
+            });
+
+            Date.prototype.Format = function (fmt) { //author: meizz 原文地址：https://www.cnblogs.com/zhangpengshou/archive/2012/07/19/2599053.html
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "h+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            }
+            //监听头部工具栏事件
+            table.on("toolbar(userTable)", function(obj) {
+                // console.log(obj.event)
+                // layer.msg("大家好")
+                switch (obj.event) {
+                    case 'add':
+                        layer.msg("添加");
+                        break;
+                    case 'remove':
+                        layer.msg("批量删除");
+                        break;
+                }
+            })
+            //监听复选框事件
+            table.on("checkbox(userTable)",function(obj){
+                console.log(obj.data)
+                console.log(obj.checked)
+                console.log(obj.type)
+            })
+
+            table.on('edit(userTable)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+                console.log(obj.value); //得到修改后的值
+                console.log(obj.field); //当前编辑的字段名
+                console.log(obj.data); //所在行的所有相关数据
+            });
+            //监听工具条
+            table.on('tool(userTable)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+                if(layEvent === 'del'){ //删除
+                    layer.confirm('真的删除行么', function(index){
+                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        layer.close(index);
+                        //向服务端发送删除指令
+                        $.ajax({
+                            url:"http://localhost:9000/community/remove",
+                            data:{
+                                "questionId":data.id
+                            },
+                            success(res){
+                                console.log(res);
+                            }
+                        })
+                    });
+                } else if(layEvent === 'edit'){ //编辑
+                    //do something
+                    layer.msg("审核")
+
+                }else if (layEvent === 'look'){
+                    window.open("http://localhost:9000/community/question/"+data.id,"_blank")
+                }
+            });
+        });
+    }
+    function check(){
+        url = 'http://localhost:9000/community/questionListAdmin'
+        layui.use(['table', 'layer', 'jquery','element'], function() {
+            var $ = layui.jquery;
+            var table = layui.table;
+            var layer = layui.layer;
+            var element = layui.element;
+            console.log(url)
+
+            //第一个实例
+            table.render({
+                elem: '#main-table'
+                ,
+                url: url //数据接口
+                ,
+                page: true //开启分页
+                ,
+                toolbar: "#toolbarTop",
+                totalRow: true,
+                cols: [
+                    [ //表头
+                        {
+                            type: 'checkbox',
+                            fixed: 'left'
+                        }, {
+                        field: 'id',
+                        title: 'ID',
+                        sort: true,
+                        fixed: 'left',
+                        width:100
+                    }, {
+                        field: 'name',
+                        title: '作者',
+                        width:100
+                    }, {
+                        field: 'title',
+                        title: '标题',
+                        sort: true,
+                    }, {
+                        field: 'gmtCreate',
+                        title: '发布时间',
+                        templet:function (obj) {
+                            var date = new Date(obj.gmtCreate).Format("yyyy-MM-dd hh:mm:ss");
+                            return date
+                        },
+
+                    }, {
+                        field: 'viewCount',
+                        title: '观看数',
+                        width:100
+
+                    }, {
+                        field: 'likeCount',
+                        title: '点赞数',
+                        sort: true,
+                        width:100
+
+                    },{
+                        fixed: 'right',
+                        title: '操作',
+                        toolbar: '#barDemo'
+
+                    }
+                    ]
+                ]
+            });
+
+            Date.prototype.Format = function (fmt) { //author: meizz 原文地址：https://www.cnblogs.com/zhangpengshou/archive/2012/07/19/2599053.html
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "h+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            }
+            //监听头部工具栏事件
+            table.on("toolbar(userTable)", function(obj) {
+                // console.log(obj.event)
+                // layer.msg("大家好")
+                switch (obj.event) {
+                    case 'add':
+                        layer.msg("添加");
+                        break;
+                    case 'remove':
+                        layer.msg("批量删除");
+                        break;
+                }
+            })
+            //监听复选框事件
+            table.on("checkbox(userTable)",function(obj){
+                console.log(obj.data)
+                console.log(obj.checked)
+                console.log(obj.type)
+            })
+
+            table.on('edit(userTable)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+                console.log(obj.value); //得到修改后的值
+                console.log(obj.field); //当前编辑的字段名
+                console.log(obj.data); //所在行的所有相关数据
+            });
+            //监听工具条
+            table.on('tool(userTable)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+                if(layEvent === 'del'){ //删除
+                    layer.confirm('真的删除行么', function(index){
+                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        layer.close(index);
+                        //向服务端发送删除指令
+                        $.ajax({
+                            url:"http://localhost:9000/community/remove",
+                            data:{
+                                "questionId":data.id
+                            },
+                            success(res){
+                                console.log(res);
+                            }
+                        })
+                    });
+                } else if(layEvent === 'edit'){ //编辑
+                    //do something
+                    layer.msg("审核")
+
+                }else if (layEvent === 'look'){
+                    window.open("http://localhost:9000/community/question/"+data.id,"_blank")
+                }
+            });
+        });
+
+    }
+
+    function allQuestion() {
+        url = 'http://localhost:9000/community/allQuestionList'
+        layui.use(['table', 'layer', 'jquery','element'], function() {
+            var $ = layui.jquery;
+            var table = layui.table;
+            var layer = layui.layer;
+            var element = layui.element;
+
+
+
+            console.log(url)
+
+            //第一个实例
+            table.render({
+                elem: '#main-table'
+                ,
+                url: url //数据接口
+                ,
+                page: true //开启分页
+                ,
+                toolbar: "#toolbarTop",
+                totalRow: true,
+                cols: [
+                    [ //表头
+                        {
+                            type: 'checkbox',
+                            fixed: 'left'
+                        }, {
+                        field: 'id',
+                        title: 'ID',
+                        sort: true,
+                        fixed: 'left',
+                        width:100
+                    }, {
+                        field: 'name',
+                        title: '作者',
+                        width:100
+                    }, {
+                        field: 'title',
+                        title: '标题',
+                        sort: true,
+                    }, {
+                        field: 'gmtCreate',
+                        title: '发布时间',
+                        templet:function (obj) {
+                            var date = new Date(obj.gmtCreate).Format("yyyy-MM-dd hh:mm:ss");
+                            return date
+                        },
+
+                    }, {
+                        field: 'viewCount',
+                        title: '观看数',
+                        width:100
+
+                    }, {
+                        field: 'likeCount',
+                        title: '点赞数',
+                        sort: true,
+                        width:100
+
+                    },{
+                        fixed: 'right',
+                        title: '操作',
+                        toolbar: '#barDemo'
+
+                    }
+                    ]
+                ]
+            });
+
+            Date.prototype.Format = function (fmt) { //author: meizz 原文地址：https://www.cnblogs.com/zhangpengshou/archive/2012/07/19/2599053.html
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "h+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            }
+            //监听头部工具栏事件
+            table.on("toolbar(userTable)", function(obj) {
+                // console.log(obj.event)
+                // layer.msg("大家好")
+                switch (obj.event) {
+                    case 'add':
+                        layer.msg("添加");
+                        break;
+                    case 'remove':
+                        layer.msg("批量删除");
+                        break;
+                }
+            })
+            //监听复选框事件
+            table.on("checkbox(userTable)",function(obj){
+                console.log(obj.data)
+                console.log(obj.checked)
+                console.log(obj.type)
+            })
+
+            table.on('edit(userTable)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+                console.log(obj.value); //得到修改后的值
+                console.log(obj.field); //当前编辑的字段名
+                console.log(obj.data); //所在行的所有相关数据
+            });
+            //监听工具条
+            table.on('tool(userTable)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+                if(layEvent === 'del'){ //删除
+                    layer.confirm('真的删除行么', function(index){
+                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        layer.close(index);
+                        //向服务端发送删除指令
+                        $.ajax({
+                            url:"http://localhost:9000/community/remove",
+                            data:{
+                                "questionId":data.id
+                            },
+                            success(res){
+                                console.log(res);
+                            }
+                        })
+                    });
+                } else if(layEvent === 'edit'){ //编辑
+                    //do something
+                    layer.msg("审核")
+
+                }else if (layEvent === 'look'){
+                    window.open("http://localhost:9000/community/question/"+data.id,"_blank")
+                }
+            });
+        });
+
+    }
+
+
+
+
 </script>
 </body>
 </html>
