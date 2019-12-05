@@ -49,10 +49,10 @@
                             <li><a href="/community/logout">退出登录</a></li>
                         </ul>
                     </li>
-                    <!--<li th:if=" ${session.user == null}"><a href="https://github.com/login/oauth/authorize?client_id=979d5293cbf3c4a4c977-->
-                    <!--&redirect_uri=http://www.tech4flag.com:9000/community/callback&scope=user&state=1">登录</a></li>-->
                     <li th:if=" ${session.user == null}"><a href="https://github.com/login/oauth/authorize?client_id=979d5293cbf3c4a4c977
-                    &redirect_uri=http://localhost:9000/community/callback&scope=user&state=1">登录</a></li>
+                    &redirect_uri=http://www.tech4flag.com:9000/community/callback&scope=user&state=1">登录</a></li>
+                    <!--<li th:if=" ${session.user == null}"><a href="https://github.com/login/oauth/authorize?client_id=979d5293cbf3c4a4c977-->
+                    <!--&redirect_uri=http://localhost:9000/community/callback&scope=user&state=1">登录</a></li>-->
 
                 </ul>
             </div><!-- /.navbar-collapse -->
