@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <link rel="icon" href="/community/img/favicon.ico" type="image/x-ico">
+    <link rel="stylesheet" href="/community/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/community/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/community/css/community.css">
+    <link rel="icon" href="/community/img/favicon.ico" type="image/x-ico">
+    <!--<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.js"></script>-->
+    <script src="/community/js/jquery3.4.1.js"></script>
+    <script src="/community/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/community/js/community.js"></script>
+    <!-- layui样式引入 -->
+    <link rel="stylesheet" type="text/css" href="/community/layui/css/layui.css" />
+    <script src="/community/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<!--插入导航栏-->
+<div th:insert="~{navigation :: nav}"></div>
+
+<div class="container-fluid main user">
+    <form class="layui-form" action="/community/updateUser"
+          style="width: 580px;margin: 30px; padding: 10px;border: 1px solid #eee; border-radius: 10px;" >
+        <input type="text"  name="id" required th:value="${session.user.id}" style="display: none">
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 86px;">昵称</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" th:value="${user.name}" required  lay-verify="required" placeholder="请输入昵称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 86px;">年龄</label>
+            <div class="layui-input-block">
+                <input type="text" name="age" th:value="${user.age}" required  lay-verify="required" placeholder="请输入年龄" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 86px;">学校</label>
+            <div class="layui-input-block">
+                <select name="school" lay-verify="required" lay-search>
+                    <option th:text="${schoolName}"></option>
+                    <option th:each="school:${schoolList}" th:text="${school.name}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 86px;">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="男" title="男" checked>
+                <input type="radio" name="sex" value="女" title="女" >
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label" style="width: 86px;">个人简介</label>
+            <div class="layui-input-block">
+                <textarea name="bio"  th:text="${user.bio}" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 86px;">技能标签</label>
+            <div class="layui-input-block">
+                <input type="text" name="tag" required  lay-verify="required"
+                       th:value="${user.tag}" id="tag"
+                       onfocus="showSelectTag()"
+                       autocomplete="off" placeholder="格式：以逗号（，）分隔每一个标签"
+                       class="layui-input">
+            </div>
+            <div id="select-tag" class="publish-tag-tag">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" th:each="selectCategory,selectCategorystat:${tags}"
+                        th:class="${selectCategorystat.first ? 'active':''}">
+                        <a th:href="${'#'+selectCategory.categoryName}" aria-controls="home" role="tab"
+                           data-toggle="tab" th:text="${selectCategory.getCategoryName()}"></a>
+                    </li>
+                </ul>
+                <!-- Tab panes onblur="hideSelectTag()"-->
+                <div class="tab-content">
+                    <div role="tabpanel " class="tab-pane"
+                         th:classappend="${selectCategorystat.first ? 'active':''}"
+                         th:id="${selectCategory.categoryName}"
+                         th:each="selectCategory,selectCategorystat:${tags}">
+                                    <span class="label label-info" th:each="selectTag:${selectCategory.tags}">
+                                        <span class="glyphicon glyphicon-tags" onclick="selectTag(this)"
+                                              th:data-tag="${selectTag}" th:text="${' '+selectTag}"></span>
+                                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--插入底部栏-->
+<div th:insert="~{footer :: foot}"></div>
+</body>
+<script>
+    //Demo
+    layui.use(['form','jquery'], function(){
+        var form = layui.form;
+        var $ = layui.jquery;
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            return true;
+        });
+    });
+</script>
+</html>

@@ -17,4 +17,9 @@ public class User {
     private Long gmtCreate;
     private Long gmtModified;
     private String avatarUrl;
+    private String bio;
+    private String tag;
+    private Integer schoolId;
+    private String sex;
+    private Integer age;
 }

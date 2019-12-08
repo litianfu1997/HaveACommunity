@@ -26,8 +26,9 @@
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <h2><span th:text="${sectionName}"></span></h2>
             <hr>
+            <!--我的问题-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section=='questions'}">
-                <div class="media" th:each="question:${pagination.getData()}">
+                <div class="media" th:if="${pagination.getData() != null } " th:each="question:${pagination.getData()}">
                     <div class="media-left img-size">
                         <a>
                             <img class="media-object img-rounded " th:src="${question.user.avatarUrl}">
@@ -49,7 +50,12 @@
                     </div>
                     <hr>
                 </div>
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                <div th:if="${pagination.getData() == null}">
+                    你还没有发布任何问题或文章，点右上角提问即可哦~
+                </div>
+                <!--分页-->
+                <div th:if="${pagination.getData() != null } " class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <nav aria-label="Page navigation">
                         <ul class="pagination">
                             <li th:if="${pagination.showPrevious}">
@@ -82,8 +88,9 @@
                 </div>
 
             </div>
+            <!--最新回复-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section=='replies'}">
-                <div class="media" th:each="notification:${paginationN.getData()}">
+                <div class="media" th:if="${paginationN.getData() != null } " th:each="notification:${paginationN.getData()}">
                     <div class="media-body">
                         <p>
                             <span th:text="${notification.getNotifierName()+' '+notification.getTypeName()+' '}"></span>
@@ -95,8 +102,11 @@
                         <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:0;margin-bottom: 0;">
                     </div>
                 </div>
-
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div th:if="${paginationN.getData() == null}">
+                    没有任何回复哦~
+                </div>
+                <!--分页-->
+                <div th:if="${paginationN.getData() != null } " class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <nav aria-label="Page navigation">
                         <ul class="pagination">
                             <li th:if="${paginationN.showPrevious}">
@@ -141,8 +151,7 @@
                    th:class="${section=='questions'}?'list-group-item active':'list-group-item'">我的问题</a>
                 <a href="/community/profile/replies"
                    th:class="${section=='replies'}?'list-group-item active':'list-group-item'">
-                    最新回复 <span class="badge" th:text="${session.unreadCount}"></span>
-                </a>
+                    最新回复  <span th:if="${session.unreadCount !=0}" class="badge" th:text="${session.unreadCount}"></span>
                 <a href="#" class="list-group-item">其他</a>
 
             </div>
