@@ -3,9 +3,11 @@ package com.tech4flag.community.controller;
 import com.tech4flag.community.dto.AdminQuestionDTO;
 import com.tech4flag.community.model.Question;
 import com.tech4flag.community.service.AdminQuestionService;
+import com.tech4flag.community.service.AdminService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,9 +27,29 @@ public class AdminController {
     @Autowired
     private AdminQuestionService adminQuestionService;
 
+    @Autowired
+    private AdminService adminService;
+
     @RequestMapping("/admin")
     public String AdminIndex(){
-        return "adminView";
+        return "admin";
+    }
+
+    @RequestMapping("/adminLogin")
+    public String adminLogin(@RequestParam("username")String username,
+                             @RequestParam("password")String password,
+                            Model model){
+        System.out.println(username);
+        System.out.println(password);
+        Boolean b = adminService.login(username,password);
+        if (!b.equals(true)){
+            model.addAttribute("msg","用户不存在或者密码错误");
+            return "admin";
+        }else {
+            adminService.update();
+            model.addAttribute("msg","登录成功");
+            return "adminView";
+        }
     }
 
 
@@ -92,7 +114,7 @@ public class AdminController {
         List<AdminQuestionDTO> list = adminQuestionService.allQuestionList(page, limit);
         Integer count = adminQuestionService.allCount();
         Map<String,Object> map = new HashMap<String,Object>();
-        //code=0代表请求成功?
+        //code=0代表请求成功
         map.put("code",0);
         //返回的提示信息
         map.put("msg","");

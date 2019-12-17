@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员登录页</title>
+    <link rel="icon" href="/community/img/favicon.ico" type="image/x-ico">
+    <link rel="stylesheet" type="text/css" href="/community/layui/css/layui.css"/>
+    <script src="/community/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body style="background-color: #F2F2F2">
+
+<div style="display: flex;flex-direction: column;
+    align-items: center;justify-content: center;
+    width: 100%;height: 600px;">
+    <div class="layui-card">
+        <div class="layui-card-header" style="text-align: center;">管理员登录</div>
+        <div class="layui-card-body">
+            <form class="layui-form" action="http://localhost:9000/community/adminLogin" method="post">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">账号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="username" required lay-verify="required" placeholder="请输入账号"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux" ></div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-inline">
+                        <input type="password" name="password" required lay-verify="required" placeholder="请输入密码"
+                               autocomplete="off" class="layui-input">
+                    </div>
+
+                </div>
+                <div style="width: 100%;text-align: center;color: red;">
+                    <div  th:text="${msg}" ></div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" style="width: 188px;" lay-submit lay-filter="formDemo">登录</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+
+
+<script>
+    //Demo
+    layui.use(['form','layer'], function () {
+        var form = layui.form;
+        var $ = layui.jquery;
+
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+
+            // $.ajax({
+            //     url:"http://localhost:9000/community/adminLogin",
+            //     method:"POST",
+            //     data:data.field,
+            //     success(res){
+            //         console.log("123123")
+            //     }
+            //
+            // })
+            // return true
+        });
+    });
+</script>
+</body>
+</html>

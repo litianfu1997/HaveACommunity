@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tech4flag.community.mapper.AdminMapper">
+    <select id="usernameIsExist" parameterType="String" resultType="Admin">
+       select * from admin where username = #{v}
+    </select>
+    <select id="login" resultType="Admin" parameterType="String">
+        select * from admin where username=#{username} and password=#{password}
+    </select>
+    <update id="update" parameterType="long" >
+        update admin set admin.login_time = #{v}
+    </update>
+
+</mapper>
