@@ -1,6 +1,7 @@
 package com.tech4flag.community.controller;
 
 import com.tech4flag.community.dto.AdminQuestionDTO;
+import com.tech4flag.community.model.Message;
 import com.tech4flag.community.model.Question;
 import com.tech4flag.community.service.AdminQuestionService;
 import com.tech4flag.community.service.AdminService;
@@ -35,12 +36,15 @@ public class AdminController {
         return "admin";
     }
 
+    @RequestMapping("/adminLogout")
+    public String adminLogout(){
+        return "redirect:admin";
+    }
+
     @RequestMapping("/adminLogin")
     public String adminLogin(@RequestParam("username")String username,
                              @RequestParam("password")String password,
                             Model model){
-        System.out.println(username);
-        System.out.println(password);
         Boolean b = adminService.login(username,password);
         if (!b.equals(true)){
             model.addAttribute("msg","用户不存在或者密码错误");
@@ -48,6 +52,7 @@ public class AdminController {
         }else {
             adminService.update();
             model.addAttribute("msg","登录成功");
+            model.addAttribute("username",username);
             return "adminView";
         }
     }
@@ -125,10 +130,22 @@ public class AdminController {
         return map;
     }
 
+    @RequestMapping("/check")
+    @ResponseBody
+    public Message check(@RequestParam("questionId")Integer id){
+        adminService.check(id);
+        return new Message("success","审核成功");
+    }
+
+    /**
+     * 删除文章
+     * @param id
+     */
     @RequestMapping("/remove")
     @ResponseBody
-    public void remove(@RequestParam("questionId")Integer id){
+    public Message remove(@RequestParam("questionId")Integer id){
         adminQuestionService.remove(id);
-        System.out.println("进入删除控制层："+id);
+        return new Message("success","删除成功");
+
     }
 }

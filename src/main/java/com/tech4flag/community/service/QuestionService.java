@@ -5,9 +5,12 @@ import com.tech4flag.community.dto.QuestionDTO;
 import com.tech4flag.community.exception.CustomizeErrorCode;
 import com.tech4flag.community.exception.CustomizeException;
 import com.tech4flag.community.mapper.QuestionMapper;
+import com.tech4flag.community.mapper.SchoolMapper;
 import com.tech4flag.community.mapper.UserMapper;
 import com.tech4flag.community.model.Question;
+import com.tech4flag.community.model.School;
 import com.tech4flag.community.model.User;
+import com.tech4flag.community.dto.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,10 +36,22 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private SchoolMapper schoolMapper;
+
     private Integer totalCount;
 
     private List<Question> questionList;
 
+    /**
+     * 有条件的获取文章列表
+     * @param type
+     * @param search
+     * @param tag
+     * @param page
+     * @param size
+     * @return
+     */
     public PaginationDTO<QuestionDTO> list(String type,String search,String tag,Integer page, Integer size) {
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         List<QuestionDTO> questionDTOList = new ArrayList<>();
@@ -114,6 +128,13 @@ public class QuestionService {
         return paginationDTO;
     }
 
+    /**
+     * 获取文章列表
+     * @param userId
+     * @param page
+     * @param size
+     * @return
+     */
     public PaginationDTO list(Integer userId, Integer page, Integer size) {
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         PaginationDTO paginationDTO = new PaginationDTO();
@@ -147,6 +168,11 @@ public class QuestionService {
         return paginationDTO;
     }
 
+    /**
+     * 获取文章
+     * @param id
+     * @return
+     */
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.getById(id);
         if (question==null){
@@ -156,9 +182,17 @@ public class QuestionService {
         //BeanUtils可以将两个对象的属性进行快速封装
         BeanUtils.copyProperties(question,questionDTO);
         User user = userMapper.findById(question.getCreator());
+        School school = schoolMapper.getSchoolById(user.getSchoolId());
         questionDTO.setUser(user);
+        questionDTO.setSchool(school);
         return questionDTO;
     }
+
+    /**
+     * 获取与该问题相关的文章
+     * @param id
+     * @return
+     */
     public List<QuestionDTO> getRelevantQuestion(Integer id) {
         Question question = questionMapper.getById(id);
         if (question==null){
@@ -178,6 +212,34 @@ public class QuestionService {
         }
 
         return questionDTOList;
+    }
+
+    /**
+     * 匹配相关人选
+     * @param id
+     * @return
+     */
+    public List<UserDTO> getRelevantUser(Integer id) {
+        Question question = questionMapper.getById(id);
+        if (question==null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
+        //\W:匹配非字母、数字、下划线。等价于 '[^A-Za-z0-9_]'
+        String tagRegexp = question.getTag().replaceAll(",", "|");
+        User dbUser = userMapper.findById(question.getCreator());
+        List<User> userList = userMapper.relevantUser(dbUser.getId(), tagRegexp, dbUser.getSchoolId());
+        List<UserDTO> userDTOList = new ArrayList<>();
+        for (User user : userList) {
+            UserDTO userDTO = new UserDTO();
+            BeanUtils.copyProperties(user,userDTO);
+            School school = schoolMapper.getSchoolById(user.getSchoolId());
+            userDTO.setSchool(school);
+            userDTOList.add(userDTO);
+
+        }
+
+
+        return userDTOList;
     }
 
     public void createOrUpdate(Question question) {

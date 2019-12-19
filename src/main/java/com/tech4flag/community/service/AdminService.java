@@ -1,6 +1,7 @@
 package com.tech4flag.community.service;
 
 import com.tech4flag.community.mapper.AdminMapper;
+import com.tech4flag.community.mapper.QuestionMapper;
 import com.tech4flag.community.model.Admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ public class AdminService {
 
     @Autowired
     private AdminMapper adminMapper;
+
+    @Autowired
+    private QuestionMapper questionMapper;
 
     /**
      * 登陆功能
@@ -48,5 +52,13 @@ public class AdminService {
     public void update() {
         long currentTimeMillis = System.currentTimeMillis();
         adminMapper.update(currentTimeMillis);
+    }
+
+    /**
+     * 审核文章
+     * @param id
+     */
+    public void check(Integer id) {
+        questionMapper.check(id);
     }
 }

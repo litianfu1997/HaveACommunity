@@ -23,4 +23,6 @@ public interface AdminMapper {
 
     @Update("update admin set admin.login_time = #{v}")
     void update(@Param("v") long currentTimeMillis);
+
+
 }

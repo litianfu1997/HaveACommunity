@@ -1,7 +1,10 @@
 package com.tech4flag.community.mapper;
 
+import com.tech4flag.community.dto.UserDTO;
 import com.tech4flag.community.model.User;
 import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 /**
  * @author litianfu
@@ -36,4 +39,8 @@ public interface UserMapper {
             "bio=#{bio},age=#{age},sex=#{sex},tag=#{tag},school_id=#{schoolId} "+
             "where id = #{id}")
     void update(User user);
+
+    @Select("select * from user where id != #{id} and " +
+            "school_id = #{schoolId} and tag regexp #{tagRegexp} ")
+    List<User> relevantUser(@Param("id") Integer id,@Param("tagRegexp") String tagRegexp,@Param("schoolId") Integer schoolId);
 }

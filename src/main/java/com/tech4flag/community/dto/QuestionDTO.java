@@ -1,5 +1,6 @@
 package com.tech4flag.community.dto;
 
+import com.tech4flag.community.model.School;
 import com.tech4flag.community.model.User;
 import lombok.Data;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class QuestionDTO {
     private Integer likeCount;
     private Integer commentCount;
     private User user;
+    private School school;
 
 
 

@@ -155,24 +155,65 @@
                 <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
                     <h4>发起人</h4>
                     <div class="media">
-                        <div class="media-left img-size">
+                        <div class="media-left media-middle img-size">
                             <a href="#">
                                 <img class="media-object img-circle "  th:src="${question.user.avatarUrl}" >
                             </a>
                         </div>
                         <div class="media-body">
-                            <h6 class="media-heading" >
-                                <span th:text="${question.user.name}"></span>
+                            <h6 class="media-heading text-desc" >
+                                <span th:text="${question.user.name}"></span> |
+                                <span th:text="${question.user.sex}"></span> |
+                                <span th:text="${question.user.age}"></span> 岁 |
+                                <span th:text="${question.school.name}"></span>
                             </h6>
+                            <h6 class="media-heading text-desc" >
+                                <span th:text="${question.user.bio}"></span>
+                            </h6>
+                            <h6 class="media-heading" >
+                                <span th:each="tag:${question.user.tag.split(',')}">
+                                    <span style="font-size: 6px;" class="label label-success " th:text="${tag}"></span>
+                                </span>
+                            </h6>
+
                         </div>
                         <hr>
                     </div>
                 </div>
                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                    <h4 style="margin-top: 20px;margin-bottom: 20px;">推荐内容</h4>
+                    <h4 style="margin-top: 10px;margin-bottom: 10px;">推荐人选</h4>
                     <br>
+                    <div th:each="user:${relevantUsers}" class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="media" >
+                                <div class="media-left media-middle img-size">
+                                    <a href="#">
+                                        <img class="media-object img-circle "  th:src="${user.avatarUrl}" >
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h6 class="media-heading text-desc" >
+                                        <span th:text="${user.name}"></span> |
+                                        <span th:text="${user.sex}"></span> |
+                                        <span th:text="${user.age}"></span> 岁 |
+                                        <span th:text="${user.school.name}"></span>
+                                    </h6>
+                                    <h6 class="media-heading text-desc" >
+                                        <span th:text="${user.bio}"></span>
+                                    </h6>
+                                    <h6 class="media-heading" >
+                                <span th:each="tag:${user.tag.split(',')}">
+                                    <span style="font-size: 6px;" class="label label-success " th:text="${tag}"></span>
+                                </span>
+                                    </h6>
 
-                    <img  class="ad-img thumbnail" src="http://tech4flag.cn-gd.ufileos.com/sjw.gif?UCloudPublicKey=x7Qo4UK4iU8zzDNFuwpRMHne26AjIPH3y2dG0l1g&Signature=f6EAXeh8KL0C%2FYO7ygrTZ9gQpsY%3D&Expires=1568564299">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--<img  class="ad-img thumbnail" src="http://tech4flag.cn-gd.ufileos.com/sjw.gif?UCloudPublicKey=x7Qo4UK4iU8zzDNFuwpRMHne26AjIPH3y2dG0l1g&Signature=f6EAXeh8KL0C%2FYO7ygrTZ9gQpsY%3D&Expires=1568564299">-->
 
                 </div>
 

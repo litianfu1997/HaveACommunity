@@ -156,4 +156,7 @@ public interface QuestionMapper {
 
     @Delete("delete from question where id = #{id}")
     void removeById(@Param("id") Integer id);
+
+    @Update("update question set isPass = 1 where id = #{id}")
+    void check(@Param("id") Integer id);
 }

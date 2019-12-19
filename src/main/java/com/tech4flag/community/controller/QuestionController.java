@@ -2,6 +2,7 @@ package com.tech4flag.community.controller;
 
 import com.tech4flag.community.dto.CommentDTO;
 import com.tech4flag.community.dto.QuestionDTO;
+import com.tech4flag.community.dto.UserDTO;
 import com.tech4flag.community.enums.CommentTypeEnum;
 import com.tech4flag.community.service.CommentService;
 import com.tech4flag.community.service.QuestionService;
@@ -35,8 +36,10 @@ public class QuestionController {
         List<CommentDTO> comments = commentService.selectCommentList(id, CommentTypeEnum.QUESTION.getType());
         QuestionDTO questionDTO = questionService.getById(id);
         List<QuestionDTO> relevantQuestionList = questionService.getRelevantQuestion(id);
+        List<UserDTO> relevantUsers = questionService.getRelevantUser(id);
         //将按创建时间评论倒序
         Collections.sort(comments);
+        model.addAttribute("relevantUsers",relevantUsers);
         model.addAttribute("relevantQuestionList",relevantQuestionList);
         model.addAttribute("question",questionDTO);
         model.addAttribute("comments",comments);
