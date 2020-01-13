@@ -92,11 +92,18 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section=='replies'}">
                 <div class="media" th:if="${paginationN.getData() != null } " th:each="notification:${paginationN.getData()}">
                     <div class="media-body">
-                        <p>
+                        <p th:if="${notification.getOuterId() != null}">
                             <span th:text="${notification.getNotifierName()+' '+notification.getTypeName()+' '}"></span>
                             <a th:href="@{'/notification/'+${notification.getId()}}" class="media-heading"
                                th:text="${notification.getOuterTitle()}"></a>
                             <span class="label label-danger" th:if="${notification.getStatus()==0}">未读</span>
+                        </p>
+                        <p th:if="${notification.getOuterId() == null}">
+                            <a th:href="@{'/notification/'+${notification.getId()}}" class="media-heading"
+                               th:text="${notification.getNotifierName()}"></a>
+                            <span th:text="${' '+notification.getTypeName()+' '}"></span>
+                            <span class="label label-danger" th:if="${notification.getStatus()==0}">未读</span>
+
                         </p>
                         <span th:text="${#dates.format(notification.getGmtCreate(),'yyyy-MM-dd HH:mm:ss')}"></span>
                         <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:0;margin-bottom: 0;">

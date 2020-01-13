@@ -8,7 +8,8 @@ package com.tech4flag.community.enums;
  */
 public enum NotificationTypeEnum {
     REPLY_QUESTION(1,"回复了问题"),
-    REPLY_COMMENT(2,"回复了评论");
+    REPLY_COMMENT(2,"回复了评论"),
+    CHAT(3,"发来私信");
 
 
     private Integer status;

@@ -156,12 +156,14 @@
                     <h4>发起人</h4>
                     <div class="media">
                         <div class="media-left media-middle img-size">
-                            <a href="#">
-                                <img class="media-object img-circle "  th:src="${question.user.avatarUrl}" >
+                            <a onclick="sendMessage()" href="/community/chat" title="点击私信">
+                                <img  class="media-object img-circle "  th:src="${question.user.avatarUrl}" >
                             </a>
                         </div>
                         <div class="media-body">
                             <h6 class="media-heading text-desc" >
+                                <input type="hidden" id="fromUser" th:value="${session.user.id}">
+                                <input id="toUser" type="hidden" th:value="${question.user.id}">
                                 <span th:text="${question.user.name}"></span> |
                                 <span th:text="${question.user.sex}"></span> |
                                 <span th:text="${question.user.age}"></span> 岁 |
@@ -187,12 +189,13 @@
                         <div class="panel-body">
                             <div class="media" >
                                 <div class="media-left media-middle img-size">
-                                    <a href="#">
+                                    <a onclick="sendMessageList(this.id)" th:id="${user.id}" th:attr="data-userId=${user.id}"  href="/community/chat" title="点击私信">
                                         <img class="media-object img-circle "  th:src="${user.avatarUrl}" >
                                     </a>
                                 </div>
                                 <div class="media-body">
                                     <h6 class="media-heading text-desc" >
+                                        <!--<input th:id="${user.id}" type="hidden" th:value="${user.id}">-->
                                         <span th:text="${user.name}"></span> |
                                         <span th:text="${user.sex}"></span> |
                                         <span th:text="${user.age}"></span> 岁 |
@@ -236,4 +239,37 @@
 <!--插入底部栏-->
 <div th:insert="~{footer :: foot}"></div>
 </body>
+<script type="text/javascript">
+    function sendMessage(){
+        //获取接收者id
+        var toUserId = $("#toUser").val();
+        //获取发送者id
+        var fromUserId = $("#fromUser").val();
+        //将这两个人的id存入缓存
+        sessionStorage.setItem("toUserId",toUserId)
+        sessionStorage.setItem("fromUserId",fromUserId)
+        $.get({
+            url:"/community/chat",
+            data:{
+                "toUserId":toUserId,
+                "fromUserId":fromUserId
+            },
+        })
+
+    }
+    function sendMessageList(toUserId){
+        var fromUserId = $("#fromUser").val();
+        console.log(toUserId)
+        console.log(fromUserId)
+        sessionStorage.setItem("toUserId",toUserId)
+        sessionStorage.setItem("fromUserId",fromUserId)
+        $.get({
+            url:"/community/chat",
+            data:{
+                "toUserId":toUserId,
+                "fromUserId":fromUserId
+            },
+        })
+    }
+</script>
 </html>

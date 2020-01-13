@@ -16,8 +16,10 @@ public interface NotificationMapper {
     @Insert("insert into notification(id,notifier,receiver,outerId,type,gmt_create,status,notifier_name,outer_title) " +
             "values(#{id},#{notifier},#{receiver},#{outerId},#{type},#{gmtCreate},#{status},#{notifierName},#{outerTitle})")
     void insertNotify(Notification notification);
+
     @Select("select count(1) from notification where receiver = #{userId} and status = 0")
     Integer unreadCountByUserId(@Param("userId") Integer userId);
+
     @Select("select count(1) from notification where receiver = #{userId} ")
     Integer countByUserId(@Param("userId") Integer userId);
 

@@ -38,6 +38,8 @@ public class NotificationController {
         if (NotificationTypeEnum.REPLY_COMMENT.getType().equals(notificationDTO.getType())
                 || NotificationTypeEnum.REPLY_QUESTION.getType().equals(notificationDTO.getType())){
             return "redirect:/question/"+notificationDTO.getOuterId();
+        }else if (notificationDTO.getType() == 3){
+            return "redirect:/chat";
         }else {
             return "redirect:index";
         }
