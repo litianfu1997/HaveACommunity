@@ -82,12 +82,18 @@ public class LikeCountController {
     @RequestMapping("/likedList")
     public @ResponseBody List<QuestionFlag> likedList(HttpServletRequest request){
         User user = (User) request.getSession().getAttribute("user");
+        if (user == null){
+            return null;
+        }
         List<QuestionFlag> likedList = questionLikeCountMapper.isLikedByUserId(user.getId());
         return likedList;
     }
     @RequestMapping("/commentLikedList")
     public @ResponseBody List<CommentFlag> commentLikedList(HttpServletRequest request){
         User user = (User) request.getSession().getAttribute("user");
+        if (user == null){
+            return null;
+        }
         List<CommentFlag> likedList = commentLikeCountMapper.isLikedByUserId(user.getId());
         return likedList;
     }

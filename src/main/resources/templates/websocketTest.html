@@ -9,13 +9,10 @@
 </head>
 
 <body>
-
-
-<div id="message" class="chat-box" style="overflow-y:scroll;"></div>
-<textarea  placeholder="请输入信息" class="chat-bot" id="text" ></textarea>
-
-
+    <div id="message" class="chat-box" style="overflow-y: scroll;"></div>
+    <textarea  placeholder="请输入信息" class="chat-bot" id="text" ></textarea>
 </body>
+
 <script type="text/javascript">
     var websocket = null;
     var val = $("#userId").val();
@@ -29,6 +26,11 @@
         fromUserId = sessionStorage.getItem("fromUserId");
         //接收者id
         toUserId = sessionStorage.getItem("toUserId");
+
+        //发送者id
+        fromUserId = localStorage.getItem("fromUserId");
+        //接收者id
+        toUserId = localStorage.getItem("toUserId");
 
         console.log(fromUserId);
         console.log(toUserId)
@@ -46,6 +48,10 @@
                     console.log(item)
                     this.setMessageInnerHTML(item.fromUserName+' : '+item.msg)
                 })
+                //将滚动条拉到最下面
+                $(document).ready(function () {
+                    $(".chat-box").scrollTop($(".chat-box")[0].scrollHeight)
+                })
             }
 
         })
@@ -55,6 +61,7 @@
     function connectWebSocket() {
         //判断当前浏览器是否支持WebSocket
         if ('WebSocket' in window) {
+            //地址上线要修改
             websocket = new WebSocket("ws://localhost:9000/community/websocket/"+fromUserId);
         } else {
             alert('Not support websocket')
