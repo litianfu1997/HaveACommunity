@@ -22,8 +22,8 @@
 <script>
     L2Dwidget.init({"display": {
             "superSample": 2,
-            "width": 200,
-            "height": 400,
+            "width": 100,
+            "height": 200,
             "position": "right",
             "hOffset": 0,
             "vOffset": 0
@@ -156,7 +156,7 @@
                     <h4>发起人</h4>
                     <div class="media">
                         <div class="media-left media-middle img-size">
-                            <a th:if="${session.user!=null}" onclick="sendMessage()" href="/community/chat" title="点击私信">
+                            <a id="mya" th:if="${session.user!=null}" href="/community/chat" onclick="return sendMessage();"  title="点击私信">
                                 <img  class="media-object img-circle "  th:src="${question.user.avatarUrl}" >
                             </a>
                             <a th:if="${session.user==null}" onclick="sendMessage()"  title="请登录后再点击私信">
@@ -188,11 +188,12 @@
                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
                     <h4 style="margin-top: 10px;margin-bottom: 10px;">推荐人选</h4>
                     <br>
-                    <div th:each="user:${relevantUsers}" class="panel panel-default">
+                    <div th:if="${relevantUsers.size()==0}" style="color: #9d9d9d">暂时没有合适人选~</div>
+                    <div  th:each="user:${relevantUsers}" class="panel panel-default">
                         <div class="panel-body">
                             <div class="media" >
                                 <div class="media-left media-middle img-size">
-                                    <a th:if="${session.user!=null}" onclick="sendMessageList(this.id)" th:id="${user.id}" th:attr="data-userId=${user.id}"  href="/community/chat" title="点击私信">
+                                    <a th:if="${session.user!=null}" onclick="return sendMessageList(this.id);" th:id="${user.id}" th:attr="data-userId=${user.id}"  href="/community/chat" title="点击私信">
                                         <img class="media-object img-circle "  th:src="${user.avatarUrl}" >
                                     </a>
                                     <a th:if="${session.user==null}" onclick="sendMessageList(this.id)" th:id="${user.id}" th:attr="data-userId=${user.id}"   title="请登录后再点击私信">
@@ -228,7 +229,10 @@
 
                 <!--相关问题-->
                 <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+                    <br>
                     <h4>相关问题</h4>
+                    <div th:if="${relevantQuestionList.size()==0}" style="color: #9d9d9d">暂时没有相关的问题~</div>
+
                     <ul class="question-related">
                         <li th:each="related: ${relevantQuestionList}">
                             <a th:href="@{'/question/'+${related.id}}" th:text="${related.title}"></a>
@@ -251,6 +255,14 @@
         var toUserId = $("#toUser").val();
         //获取发送者id
         var fromUserId = $("#fromUser").val();
+        if (toUserId == fromUserId){
+            $('#mya').click(function (e) {
+                e.preventDefault();
+                return false
+            })
+            alert("不能私聊自己！")
+            return false
+        }
         if (fromUserId == -1 ){
             alert("请您先登录");
             return
@@ -273,6 +285,14 @@
     }
     function sendMessageList(toUserId){
         var fromUserId = $("#fromUser").val();
+        if (toUserId == fromUserId){
+            $('#mya').click(function (e) {
+                e.preventDefault();
+                return false
+            })
+            alert("不能私聊自己！")
+            return false
+        }
         if (fromUserId == -1 ){
             alert("请您先登录");
             return

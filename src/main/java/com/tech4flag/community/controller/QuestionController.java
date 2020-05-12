@@ -39,6 +39,7 @@ public class QuestionController {
         List<UserDTO> relevantUsers = questionService.getRelevantUser(id);
         //将按创建时间评论倒序
         Collections.sort(comments);
+        System.out.println("88888888888**************88888888888"+relevantUsers.toString());
         model.addAttribute("relevantUsers",relevantUsers);
         model.addAttribute("relevantQuestionList",relevantQuestionList);
         model.addAttribute("question",questionDTO);

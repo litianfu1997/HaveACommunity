@@ -78,7 +78,7 @@ public class MyWebSocket {
          //从set中删除
         webSocketSet.remove(this);
         map.remove(fromUserId);
-        System.out.println("有一连接关闭！当前在线人数为" + webSocketSet.size());
+//        System.out.println("有一连接关闭！当前在线人数为" + webSocketSet.size());
     }
 
 
